@@ -1,0 +1,20 @@
+{
+  "channel": "ticker",
+  "client_id": "",
+  "timestamp": "2026-05-01T22:30:00.000Z",
+  "sequence_num": 12345,
+  "events": [
+    {
+      "type": "update",
+      "tickers": [
+        {
+          "type": "ticker",
+          "product_id": "BTC-USD",
+          "price": "42163.45",
+          "volume_24_h": "19834.9123",
+          "time": "2026-05-01T22:30:00.000Z"
+        }
+      ]
+    }
+  ]
+}

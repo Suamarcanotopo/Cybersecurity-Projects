@@ -1,0 +1,552 @@
+// ===================
+// © AngelaMos | 2026
+// landing.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+$corner-size: 12px;
+$corner-weight: 1px;
+$corner-offset: $space-4;
+$hex-col-width: 72px;
+$content-max: 860px;
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: $bg-default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-4 $space-6;
+  overflow: hidden;
+
+  @include breakpoint-up('md') {
+    padding: $space-4 $space-8;
+    padding-left: calc($hex-col-width + $space-10);
+  }
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: $z-max;
+  mix-blend-mode: multiply;
+  opacity: 1;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.hexMargin {
+  display: none;
+  position: fixed;
+  left: $space-5;
+  top: 0;
+  bottom: 0;
+  width: $hex-col-width;
+  flex-direction: column;
+  justify-content: center;
+  gap: $space-6;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+
+  @include breakpoint-up('md') {
+    display: flex;
+  }
+}
+
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
+  position: fixed;
+  width: $corner-size;
+  height: $corner-size;
+  pointer-events: none;
+  z-index: $z-base;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background: $border-strong;
+  }
+}
+
+.cornerTL {
+  top: $corner-offset;
+  left: $corner-offset;
+
+  &::before {
+    top: 0;
+    left: 0;
+    width: $corner-size;
+    height: $corner-weight;
+  }
+
+  &::after {
+    top: 0;
+    left: 0;
+    width: $corner-weight;
+    height: $corner-size;
+  }
+}
+
+.cornerTR {
+  top: $corner-offset;
+  right: $corner-offset;
+
+  &::before {
+    top: 0;
+    right: 0;
+    width: $corner-size;
+    height: $corner-weight;
+  }
+
+  &::after {
+    top: 0;
+    right: 0;
+    width: $corner-weight;
+    height: $corner-size;
+  }
+}
+
+.cornerBL {
+  bottom: $corner-offset;
+  left: $corner-offset;
+
+  &::before {
+    bottom: 0;
+    left: 0;
+    width: $corner-size;
+    height: $corner-weight;
+  }
+
+  &::after {
+    bottom: 0;
+    left: 0;
+    width: $corner-weight;
+    height: $corner-size;
+  }
+}
+
+.cornerBR {
+  bottom: $corner-offset;
+  right: $corner-offset;
+
+  &::before {
+    bottom: 0;
+    right: 0;
+    width: $corner-size;
+    height: $corner-weight;
+  }
+
+  &::after {
+    bottom: 0;
+    right: 0;
+    width: $corner-weight;
+    height: $corner-size;
+  }
+}
+
+.metaStrip {
+  width: 100%;
+  max-width: $content-max;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-lighter;
+  padding: $space-3 0;
+}
+
+.metaCenter {
+  display: none;
+
+  @include breakpoint-up('sm') {
+    display: inline;
+  }
+}
+
+.rule {
+  width: 100%;
+  max-width: $content-max;
+  height: 1px;
+  background: $border-default;
+}
+
+.dashedRule {
+  width: 100%;
+  max-width: $content-max;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    $border-default 0,
+    $border-default 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.hero {
+  width: 100%;
+  max-width: $content-max;
+  padding: $space-16 0 $space-12;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+
+  @include breakpoint-up('md') {
+    padding: $space-20 0 $space-16;
+  }
+}
+
+.title {
+  font-family: $font-display;
+  font-size: $font-size-6xl;
+  font-weight: $font-weight-medium;
+  letter-spacing: 0.04em;
+  line-height: $line-height-none;
+  color: $text-default;
+  text-transform: uppercase;
+
+  @include breakpoint-up('sm') {
+    font-size: $font-size-5xl;
+  }
+
+  @include breakpoint-up('md') {
+    font-size: $font-size-7xl;
+  }
+
+  @include breakpoint-up('lg') {
+    font-size: $font-size-8xl;
+  }
+}
+
+.subtitle {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-lighter;
+  margin-top: $space-2;
+}
+
+.formats {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-1;
+}
+
+.formatDivider {
+  color: $border-strong;
+}
+
+.intake {
+  width: 100%;
+  max-width: $content-max;
+  padding: $space-8 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.intakeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intakeLabel {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $accent;
+}
+
+.clearBtn {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-muted;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-light;
+  }
+}
+
+$bracket-size: 14px;
+$bracket-weight: 1px;
+$bracket-inset: $space-3;
+
+.dropZone {
+  position: relative;
+  border: 1px dashed $border-strong;
+  padding: $space-10 $space-6;
+  cursor: pointer;
+  transition-property: border-color, background-color, border-style;
+  transition-duration: $duration-fast;
+  transition-timing-function: $ease-out;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: $bracket-size;
+    height: $bracket-size;
+    pointer-events: none;
+    transition: border-color $duration-fast $ease-out;
+  }
+
+  &::before {
+    top: $bracket-inset;
+    left: $bracket-inset;
+    border-top: $bracket-weight solid $border-stronger;
+    border-left: $bracket-weight solid $border-stronger;
+  }
+
+  &::after {
+    top: $bracket-inset;
+    right: $bracket-inset;
+    border-top: $bracket-weight solid $border-stronger;
+    border-right: $bracket-weight solid $border-stronger;
+  }
+
+  @include hover {
+    border-color: $border-stronger;
+
+    &::before,
+    &::after,
+    .dropPrompt::before,
+    .dropPrompt::after {
+      border-color: $accent;
+    }
+  }
+
+  &.dragActive {
+    border-style: solid;
+    border-color: $accent;
+    background: $accent-dim;
+
+    &::before,
+    &::after,
+    .dropPrompt::before,
+    .dropPrompt::after {
+      border-color: $accent;
+    }
+  }
+
+  &.hasFile {
+    border-style: solid;
+    border-color: $border-default;
+    cursor: default;
+    background: $bg-surface-75;
+    padding: $space-6;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+}
+
+.dropPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  text-align: center;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: $bracket-size;
+    height: $bracket-size;
+    pointer-events: none;
+    transition: border-color $duration-fast $ease-out;
+  }
+
+  &::before {
+    bottom: $bracket-inset;
+    left: $bracket-inset;
+    border-bottom: $bracket-weight solid $border-stronger;
+    border-left: $bracket-weight solid $border-stronger;
+  }
+
+  &::after {
+    bottom: $bracket-inset;
+    right: $bracket-inset;
+    border-bottom: $bracket-weight solid $border-stronger;
+    border-right: $bracket-weight solid $border-stronger;
+  }
+}
+
+.dropStatus {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-light;
+}
+
+.dropInstruction {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $text-muted;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.fileField {
+  display: flex;
+  align-items: baseline;
+  gap: $space-4;
+}
+
+.fieldLabel {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+  min-width: 40px;
+  flex-shrink: 0;
+}
+
+.fieldValue {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $text-default;
+  word-break: break-all;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: $space-3-5 $space-6;
+  background: $accent;
+  color: $bg-default;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  border: none;
+  transition-property: filter, opacity;
+  transition-duration: $duration-fast;
+  transition-timing-function: $ease-out;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+}
+
+.pipeline {
+  width: 100%;
+  max-width: $content-max;
+  padding: $space-8 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.pipelineLabel {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-lighter;
+}
+
+.passes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3 $space-6;
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.pass {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding-left: $space-3;
+  border-left: 2px solid $accent;
+}
+
+.passNumber {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.passName {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-light;
+}
+
+.footer {
+  width: 100%;
+  max-width: $content-max;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-6 0 $space-4;
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+  margin-top: auto;
+}
+
+.footerDesignation {
+  display: none;
+  color: $border-strong;
+
+  @include breakpoint-up('sm') {
+    display: inline;
+  }
+}

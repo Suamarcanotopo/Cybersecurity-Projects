@@ -1,0 +1,26 @@
+# Haskell build artifacts
+.stack-work/
+dist/
+dist-newstyle/
+cabal.project.local
+cabal.project.local~
+.HTF/
+.ghc.environment.*
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test certificates (self-signed, regenerate with script)
+examples/certs/
+
+# Logs
+*.log
+
+# Private progress tracking
+refer/
+
+# Development docs (research, status, plans) - not for public repo
+docs/

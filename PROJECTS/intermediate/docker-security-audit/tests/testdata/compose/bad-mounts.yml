@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    image: nginx:alpine
+
+    volumes:
+      # CRITICAL: Container runtime sockets
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/containerd/containerd.sock:/containerd.sock
+
+      # CRITICAL: System config directories
+      - /etc:/host-etc:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/shadow:/etc/shadow:ro
+
+      # CRITICAL: Root home directory
+      - /root:/host-root
+      - /root/.ssh:/ssh-keys
+      - /root/.aws:/aws-creds
+      - /root/.kube:/kube-config
+
+      # CRITICAL: Kubernetes directories
+      - /etc/kubernetes:/k8s-config
+      - /var/lib/kubelet:/kubelet-data
+
+      # HIGH: System directories
+      - /boot:/boot:ro
+      - /lib/modules:/lib/modules:ro
+
+      # HIGH: Docker data
+      - /var/lib/docker:/docker-data
+
+      # HIGH: User home directories
+      - /home:/home-dirs
+
+      # CRITICAL: Device files
+      - /dev:/dev
+
+      # CRITICAL: Proc and sys
+      - /proc:/proc
+      - /sys:/sys
+
+      # HIGH: Logs (can tamper with evidence)
+      - /var/log:/var/log
+
+    # No security restrictions
+    command: nginx -g 'daemon off;'

@@ -1,0 +1,375 @@
+// ===================
+// AngelaMos | 2026
+// edit.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+  background-color: $bg-default;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $space-6;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  margin-bottom: $space-4;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}
+
+.section {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-5;
+  margin-bottom: $space-6;
+}
+
+.sectionHeader {
+  @include flex-between;
+  margin-bottom: $space-4;
+}
+
+.sectionTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}
+
+.fields {
+  @include flex-column;
+  gap: $space-4;
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.select {
+  width: 100%;
+  height: 40px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  option {
+    background: $bg-surface-100;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.row {
+  display: grid;
+  gap: $space-4;
+
+  @include breakpoint-up('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: $accent-orange;
+  }
+}
+
+.saveBtn {
+  align-self: flex-start;
+  height: 40px;
+  padding: 0 $space-5;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.addBtn {
+  height: 36px;
+  padding: 0 $space-4;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+}
+
+.addForm {
+  @include flex-column;
+  gap: $space-4;
+  padding: $space-4;
+  background: $bg-surface-75;
+  border: 1px solid $border-muted;
+  border-radius: $radius-md;
+  margin-bottom: $space-4;
+}
+
+.assetList {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.assetItem {
+  @include flex-between;
+  padding: $space-3;
+  background: $bg-surface-75;
+  border: 1px solid $border-muted;
+  border-radius: $radius-md;
+}
+
+.assetInfo {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.assetType {
+  padding: $space-0-5 $space-2;
+  background: $bg-surface-300;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.assetId {
+  font-size: $font-size-sm;
+  font-family: $font-mono;
+  color: $text-default;
+}
+
+.scopeBadge {
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-scope='in'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-scope='out'] {
+    background: hsl(0 72% 51% / 20%);
+    color: $error-light;
+  }
+}
+
+.deleteBtn {
+  padding: $space-1 $space-3;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $error-default;
+    color: $error-default;
+  }
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  padding: $space-4;
+  text-align: center;
+}
+
+.rewardGrid {
+  @include flex-column;
+  gap: $space-3;
+  margin-bottom: $space-4;
+}
+
+.rewardRow {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3;
+  background: $bg-surface-75;
+  border: 1px solid $border-muted;
+  border-radius: $radius-md;
+
+  @include breakpoint-down('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.severityLabel {
+  width: 120px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  flex-shrink: 0;
+}
+
+.rewardInputs {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.currency {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.rewardInput {
+  width: 100px;
+  height: 36px;
+  padding: 0 $space-2;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  text-align: right;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.rewardSep {
+  color: $text-muted;
+}
+
+.loading {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $error-default;
+  font-size: $font-size-sm;
+}

@@ -1,0 +1,254 @@
+// ===================
+// AngelaMos | 2026
+// inbox.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+  background-color: $bg-default;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  @include flex-between;
+  margin-bottom: $space-6;
+  gap: $space-4;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.stats {
+  display: flex;
+  align-items: baseline;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.statValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $accent-orange;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.table {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px;
+  gap: $space-4;
+  padding: $space-3 $space-4;
+  background: $bg-surface-200;
+  border-bottom: 1px solid $border-default;
+
+  @include breakpoint-down('md') {
+    display: none;
+  }
+}
+
+.headerCell {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.tableBody {
+  @include flex-column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px;
+  gap: $space-4;
+  padding: $space-4;
+  border-bottom: 1px solid $border-muted;
+  text-decoration: none;
+  @include transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @include hover {
+    background: $bg-surface-75;
+  }
+
+  @include breakpoint-down('md') {
+    grid-template-columns: 1fr;
+    gap: $space-3;
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  @include breakpoint-down('md') {
+    &:first-child {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+.reportTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  @include truncate;
+}
+
+.status {
+  display: inline-flex;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-status='new'] {
+    background: hsl(217 91% 60% / 20%);
+    color: hsl(217, 91%, 70%);
+  }
+
+  &[data-status='triaging'] {
+    background: hsl(38 92% 50% / 20%);
+    color: hsl(38, 92%, 60%);
+  }
+
+  &[data-status='needs_more_info'] {
+    background: hsl(263 70% 50% / 20%);
+    color: hsl(263, 70%, 70%);
+  }
+
+  &[data-status='accepted'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-status='duplicate'],
+  &[data-status='not_applicable'] {
+    background: $bg-surface-200;
+    color: $text-lighter;
+  }
+
+  &[data-status='informative'] {
+    background: hsl(188 78% 41% / 20%);
+    color: hsl(188, 78%, 51%);
+  }
+
+  &[data-status='resolved'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-status='disclosed'] {
+    background: hsl(160 84% 39% / 20%);
+    color: hsl(160, 84%, 49%);
+  }
+}
+
+.severity {
+  display: inline-flex;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-severity='critical'] {
+    background: hsl(0 72% 51% / 20%);
+    color: hsl(0, 72%, 60%);
+  }
+
+  &[data-severity='high'] {
+    background: hsl(24 95% 53% / 20%);
+    color: hsl(24, 95%, 63%);
+  }
+
+  &[data-severity='medium'] {
+    background: hsl(45 93% 47% / 20%);
+    color: hsl(45, 93%, 57%);
+  }
+
+  &[data-severity='low'] {
+    background: hsl(217 91% 60% / 20%);
+    color: hsl(217, 91%, 70%);
+  }
+
+  &[data-severity='informational'] {
+    background: $bg-surface-200;
+    color: $text-lighter;
+  }
+}
+
+.date {
+  font-size: $font-size-sm;
+  color: $text-light;
+}
+
+.loading {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $error-default;
+  font-size: $font-size-sm;
+}
+
+.empty {
+  @include flex-column-center;
+  padding: $space-12;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  gap: $space-2;
+
+  p {
+    color: $text-light;
+    font-size: $font-size-sm;
+  }
+}
+
+.emptyHint {
+  color: $text-muted;
+  font-size: $font-size-xs;
+  text-align: center;
+  max-width: 320px;
+}

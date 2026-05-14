@@ -1,0 +1,243 @@
+// ===================
+// © AngelaMos | 2026
+// session.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-4 $space-6;
+  @include flex-column;
+  gap: $space-3;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-lighter;
+  @include transition-fast;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    color: $accent-green;
+  }
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.header {
+  @include flex-between;
+  padding: $space-3 $space-4;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+}
+
+.headerInfo {
+  @include flex-column;
+  gap: $space-1;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $accent-green;
+}
+
+.meta {
+  font-size: $font-size-xs;
+  font-family: $font-mono;
+  color: $text-lighter;
+}
+
+.statusDot {
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  &.online {
+    color: $accent-green;
+  }
+
+  &.offline {
+    color: $accent-red;
+  }
+}
+
+.quickActions {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.quickBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1-5;
+  padding: $space-1-5 $space-3;
+  font-size: $font-size-xs;
+  font-family: $font-mono;
+  color: $text-light;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  @include transition-fast;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    color: $accent-green;
+  }
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+    border-color: $border-strong;
+  }
+}
+
+.terminal {
+  flex: 1;
+  min-height: 300px;
+  max-height: calc(100vh - 360px);
+  overflow-y: auto;
+  padding: $space-4;
+  background: $terminal-bg;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  line-height: $line-height-relaxed;
+}
+
+.terminalHint {
+  color: $text-muted;
+  font-style: italic;
+}
+
+.entry {
+  margin-bottom: $space-4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.entryCmd {
+  color: $accent-blue;
+  font-weight: $font-weight-medium;
+  margin-bottom: $space-1;
+}
+
+.entryPending {
+  color: $accent-yellow;
+  font-style: italic;
+}
+
+.entryError {
+  color: $accent-red;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.entryOutput {
+  color: $text-light;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+
+.screenshot {
+  max-width: 100%;
+  border-radius: $radius-md;
+  margin-top: $space-2;
+  border: 1px solid $border-default;
+}
+
+.inputArea {
+  position: relative;
+}
+
+.suggestions {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  display: flex;
+  gap: $space-1;
+  padding: $space-2;
+  margin-bottom: $space-1;
+  background: $bg-surface-200;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.suggestion {
+  padding: $space-1 $space-2;
+  font-size: $font-size-xs;
+  font-family: $font-mono;
+  color: $text-light;
+  background: $bg-surface-100;
+  border-radius: $radius-sm;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-300;
+    color: $text-default;
+  }
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  background: $terminal-bg;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+
+  &:focus-within {
+    border-color: $border-strong;
+  }
+}
+
+.prompt {
+  color: $accent-green;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: $text-default;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  caret-color: $accent-green;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.notFound {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  @include flex-center;
+  height: 50vh;
+}

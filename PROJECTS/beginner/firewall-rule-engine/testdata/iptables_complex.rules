@@ -1,0 +1,36 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -m conntrack --ctstate INVALID -j DROP
+-A INPUT -i eth0 -s 10.0.0.0/8 -j DROP
+-A INPUT -i eth0 -s 172.16.0.0/12 -j DROP
+-A INPUT -i eth0 -s 192.168.0.0/16 -j DROP
+-A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW -m limit --limit 3/minute --limit-burst 5 -j ACCEPT
+-A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+-A INPUT -p tcp --dport 8080 -j ACCEPT
+-A INPUT -p udp --dport 53 -j ACCEPT
+-A INPUT -p tcp --dport 53 -j ACCEPT
+-A INPUT -p udp --dport 123 -j ACCEPT
+-A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/second --limit-burst 5 -j ACCEPT
+-A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+-A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
+-A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
+-A INPUT -s 203.0.113.0/24 -p tcp --dport 3306 -j ACCEPT
+-A INPUT -s 198.51.100.10 -p tcp --dport 5432 -j ACCEPT
+-A INPUT -m limit --limit 5/minute -j LOG --log-prefix "DROPPED: "
+-A INPUT -j DROP
+-A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A FORWARD -j DROP
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -o eth0 -j MASQUERADE
+-A PREROUTING -i eth0 -p tcp --dport 8443 -j DNAT --to-destination 10.0.1.5:443
+COMMIT

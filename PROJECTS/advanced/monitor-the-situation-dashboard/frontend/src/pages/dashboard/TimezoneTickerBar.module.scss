@@ -1,0 +1,95 @@
+// ©AngelaMos | 2026
+// TimezoneTickerBar.module.scss
+
+.bar {
+  grid-area: timezoneticker;
+  height: 26px;
+  border-bottom: 1px solid var(--fg-4);
+  background: var(--bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: scroll 48s linear infinite;
+  will-change: transform;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+}
+
+.city {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+
+  &::after {
+    content: '·';
+    color: var(--fg-4);
+    margin-left: 6px;
+  }
+}
+
+.label {
+  color: var(--fg-2);
+  text-transform: uppercase;
+}
+
+.time {
+  color: var(--fg-1);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dotOffice {
+  background: var(--ok);
+}
+
+.dotAwake {
+  background: var(--fg-2);
+}
+
+.dotNeutral {
+  background: var(--fg-3);
+}
+
+.dotAsleep {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--fg-3);
+}
+
+@media (height <= 550px) and (orientation: landscape) and (width >= 600px) {
+  .bar {
+    display: none;
+  }
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}

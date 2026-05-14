@@ -1,0 +1,450 @@
+// ===================
+// AngelaMos | 2026
+// triage.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+  background-color: $bg-default;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $space-6;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  margin-bottom: $space-4;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}
+
+.layout {
+  display: grid;
+  gap: $space-6;
+
+  @include breakpoint-up('lg') {
+    grid-template-columns: 1fr 340px;
+  }
+}
+
+.content {
+  @include flex-column;
+  gap: $space-6;
+}
+
+.section {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-5;
+}
+
+.sectionTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-4;
+}
+
+.prose {
+  font-size: $font-size-sm;
+  color: $text-light;
+  line-height: $line-height-relaxed;
+  white-space: pre-wrap;
+}
+
+.sidebar {
+  @include flex-column;
+  gap: $space-4;
+}
+
+.triageCard {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-5;
+}
+
+.triageTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-4;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid $border-muted;
+}
+
+.triageField {
+  @include flex-column;
+  gap: $space-2;
+  margin-bottom: $space-4;
+}
+
+.triageLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+}
+
+.triageSelect {
+  width: 100%;
+  height: 40px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  option {
+    background: $bg-surface-100;
+  }
+}
+
+.triageInput {
+  width: 100%;
+  height: 40px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.triageBtn {
+  width: 100%;
+  height: 40px;
+  padding: 0 $space-4;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+  margin-top: $space-2;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.infoCard {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-5;
+}
+
+.infoTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-4;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid $border-muted;
+}
+
+.infoRow {
+  @include flex-between;
+  padding: $space-2 0;
+  border-bottom: 1px solid $border-muted;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.infoValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.status {
+  display: inline-flex;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-status='new'] {
+    background: hsl(217 91% 60% / 20%);
+    color: hsl(217, 91%, 70%);
+  }
+
+  &[data-status='triaging'] {
+    background: hsl(38 92% 50% / 20%);
+    color: hsl(38, 92%, 60%);
+  }
+
+  &[data-status='needs_more_info'] {
+    background: hsl(263 70% 50% / 20%);
+    color: hsl(263, 70%, 70%);
+  }
+
+  &[data-status='accepted'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-status='duplicate'],
+  &[data-status='not_applicable'] {
+    background: $bg-surface-200;
+    color: $text-lighter;
+  }
+
+  &[data-status='informative'] {
+    background: hsl(188 78% 41% / 20%);
+    color: hsl(188, 78%, 51%);
+  }
+
+  &[data-status='resolved'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-status='disclosed'] {
+    background: hsl(160 84% 39% / 20%);
+    color: hsl(160, 84%, 49%);
+  }
+}
+
+.severity {
+  display: inline-flex;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-severity='critical'] {
+    background: hsl(0 72% 51% / 20%);
+    color: hsl(0, 72%, 60%);
+  }
+
+  &[data-severity='high'] {
+    background: hsl(24 95% 53% / 20%);
+    color: hsl(24, 95%, 63%);
+  }
+
+  &[data-severity='medium'] {
+    background: hsl(45 93% 47% / 20%);
+    color: hsl(45, 93%, 57%);
+  }
+
+  &[data-severity='low'] {
+    background: hsl(217 91% 60% / 20%);
+    color: hsl(217, 91%, 70%);
+  }
+
+  &[data-severity='informational'] {
+    background: $bg-surface-200;
+    color: $text-lighter;
+  }
+}
+
+.bounty {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: hsl(142, 76%, 46%);
+}
+
+.commentList {
+  @include flex-column;
+  gap: $space-4;
+  margin-bottom: $space-5;
+}
+
+.noComments {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  padding: $space-4;
+  text-align: center;
+}
+
+.comment {
+  padding: $space-4;
+  background: $bg-surface-75;
+  border: 1px solid $border-muted;
+  border-radius: $radius-md;
+
+  &[data-internal] {
+    background: hsl(38 92% 50% / 5%);
+    border-color: hsl(38 92% 50% / 20%);
+  }
+}
+
+.commentHeader {
+  @include flex-between;
+  margin-bottom: $space-3;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.commentAuthor {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.commentDate {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.internalBadge {
+  display: inline-flex;
+  padding: $space-0-5 $space-2;
+  background: hsl(38 92% 50% / 20%);
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: hsl(38, 92%, 60%);
+}
+
+.commentContent {
+  font-size: $font-size-sm;
+  color: $text-light;
+  line-height: $line-height-relaxed;
+  white-space: pre-wrap;
+}
+
+.commentForm {
+  @include flex-column;
+  gap: $space-3;
+  padding-top: $space-4;
+  border-top: 1px solid $border-muted;
+}
+
+.commentInput {
+  width: 100%;
+  padding: $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+  line-height: $line-height-relaxed;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.commentActions {
+  @include flex-between;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.internalCheck {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: $accent-orange;
+  }
+}
+
+.commentButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 $space-4;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.loading {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $error-default;
+  font-size: $font-size-sm;
+}

@@ -1,0 +1,24 @@
+// ===================
+// ©AngelaMos | 2026
+// dashboard.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-6;
+  width: 100%;
+  max-width: 1325px;
+  margin: 0 auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+
+  @include breakpoint-down('md') {
+    grid-template-columns: 1fr;
+  }
+}

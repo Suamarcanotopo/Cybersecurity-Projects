@@ -1,0 +1,140 @@
+// ===================
+// ©AngelaMos | 2026
+// settings.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-6;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-4;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: $space-3;
+  align-items: center;
+  font-size: $font-size-sm;
+}
+
+.infoLabel {
+  color: $text-lighter;
+}
+
+.infoValue {
+  color: $text-default;
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: capitalize;
+  color: $accent;
+  background-color: hsl(0 84% 39% / 15%);
+}
+
+.form {
+  @include flex-column;
+  gap: $space-4;
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+}
+
+.input {
+  height: 36px;
+  padding: 0 $space-3;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  padding: $space-2 $space-4;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+}
+
+.submitBtn {
+  padding: $space-2 $space-4;
+  background-color: $accent;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: $border-default;
+  margin: $space-2 0;
+}

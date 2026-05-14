@@ -1,0 +1,24 @@
+# ©AngelaMos | 2026
+# .gitignore
+
+# Rust
+backend/target/
+
+# Environment
+.env
+.env.development
+.env.production
+.env.local
+!.env.example
+
+# Development docs
+docs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.sw?

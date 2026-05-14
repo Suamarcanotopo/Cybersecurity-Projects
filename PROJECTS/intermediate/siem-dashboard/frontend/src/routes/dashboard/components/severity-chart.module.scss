@@ -1,0 +1,75 @@
+// ===================
+// ©AngelaMos | 2026
+// severity-chart.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.panel {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+  margin-bottom: $space-4;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: $space-6;
+
+  @include breakpoint-down('sm') {
+    flex-direction: column;
+  }
+}
+
+.chartWrap {
+  flex-shrink: 0;
+  width: 200px;
+  height: 200px;
+}
+
+.legend {
+  @include flex-column;
+  gap: $space-2;
+  flex: 1;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.legendDot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+}
+
+.legendLabel {
+  font-size: $font-size-sm;
+  color: $text-light;
+  text-transform: capitalize;
+  flex: 1;
+}
+
+.legendValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+  font-weight: $font-weight-medium;
+  font-variant-numeric: tabular-nums;
+}
+
+.skeleton {
+  height: 200px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-sm;
+}

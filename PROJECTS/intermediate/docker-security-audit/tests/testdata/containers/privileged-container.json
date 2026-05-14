@@ -1,0 +1,61 @@
+{
+  "Id": "abc123def456789012345678901234567890123456789012345678901234567890",
+  "Created": "2025-01-02T10:00:00.000000000Z",
+  "Name": "/dangerous-container",
+  "Config": {
+    "Image": "nginx:latest",
+    "User": "",
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+      "DATABASE_PASSWORD=SuperSecret123",
+      "API_KEY=my-secret-api-key"
+    ],
+    "Cmd": [
+      "nginx",
+      "-g",
+      "daemon off;"
+    ],
+    "Healthcheck": null
+  },
+  "HostConfig": {
+    "Privileged": true,
+    "PidMode": "host",
+    "IpcMode": "host",
+    "NetworkMode": "host",
+    "RestartPolicy": {
+      "Name": ""
+    },
+    "CapAdd": [
+      "SYS_ADMIN",
+      "NET_ADMIN",
+      "SYS_PTRACE",
+      "SYS_MODULE"
+    ],
+    "CapDrop": null,
+    "SecurityOpt": null,
+    "ReadonlyRootfs": false,
+    "Binds": [
+      "/var/run/docker.sock:/var/run/docker.sock",
+      "/etc/passwd:/host-passwd:ro",
+      "/root/.ssh:/ssh-keys:ro",
+      "/proc:/host-proc",
+      "/sys:/host-sys",
+      "/:/host"
+    ],
+    "Resources": {
+      "Memory": 0,
+      "MemoryReservation": 0,
+      "MemorySwap": 0,
+      "CpuShares": 0,
+      "CpuQuota": 0,
+      "CpuPeriod": 0,
+      "PidsLimit": null
+    }
+  },
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Pid": 12345
+  }
+}

@@ -1,0 +1,21 @@
+// ©AngelaMos | 2026
+// _ethos.scss
+
+// HARD DESIGN RULES — referenced from docs/design/ethos-reference.md.
+// Mirrored here so anyone editing styles trips over them. If you find
+// yourself wanting to break one of these, the answer is no. Fix the
+// data, not the design.
+
+// 1. Tables beat charts. Charts only when shape IS the insight.
+// 2. One alarm color: --amber. Never for decoration.
+// 3. Monochrome base. 3-4 gray tiers. No branded color per metric.
+// 4. No rounded corners, no shadows, no gradients. Straight edges. Flat.
+// 5. Motion = meaning. Only motion allowed is "data changed."
+// 6. Density > breathing room. Line-height 1.25. Row padding 4px 8px.
+// 7. Raw source one click away.
+// 8. No onboarding, no empty-state illustrations, no tooltips for
+//    common terms.
+// 9. Zoomed-out feel. AI defaults to 120%-zoom cramped. Push back.
+
+// Reference: k9s / lazygit / htop / btop / bottom / tig / NOC-SOC.
+// NOT: Bloomberg amber-on-black, kali matrix rain, Vercel rounded-cards.

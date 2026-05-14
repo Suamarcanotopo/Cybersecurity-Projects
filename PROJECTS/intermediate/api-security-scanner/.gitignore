@@ -1,0 +1,47 @@
+# ⒸAngelaMos | 2025
+# Gitignore - This is where you list files/folders that
+# should not be publicly commited to the remote repository
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+*.cache
+*.egg-info
+
+# FastAPI
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite3
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node/Frontend
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+Thumbs.db

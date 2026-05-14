@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "annotations": [
+      {
+        "id": "outage-2026-04-30-DE-DTAG",
+        "startDate": "2026-04-30T14:00:00Z",
+        "endDate": "2026-04-30T15:30:00Z",
+        "locations": ["DE"],
+        "asns": [3320],
+        "reason": "fiber cut, regional infrastructure",
+        "outageType": "REGIONAL"
+      },
+      {
+        "id": "outage-2026-05-01-IR-MCI",
+        "startDate": "2026-05-01T09:15:00Z",
+        "endDate": null,
+        "locations": ["IR"],
+        "asns": [197207],
+        "reason": "government-directed shutdown",
+        "outageType": "NATION_WIDE"
+      }
+    ]
+  }
+}

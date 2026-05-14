@@ -1,0 +1,189 @@
+# ©AngelaMos | 2026
+# justfile
+#
+# A "justfile" is a list of commands you can run with `just <name>`.
+# Think of it as a project's command center — instead of remembering
+# `uv run pytest -v`, you just type `just test`.
+#
+# Why use just instead of make? It is simpler, cross-platform,
+# and the syntax is easier to read.
+#
+# Show all commands:    `just`
+# Run a command:        `just <name>`     (e.g. `just setup`)
+
+# Export every variable defined here as an environment variable for
+# the recipes that just runs.
+set export
+# On Linux/macOS, run recipe lines with bash and -u (error on
+# unset variables) and -c (read commands from a string).
+set shell := ["bash", "-uc"]
+# On Windows, fall back to PowerShell with no logo / non-interactive.
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+# Make recipe arguments available to shebang scripts as `$1`, `$2`,
+# `$@`, and `$#`. Without this, shebang recipes only see args via the
+# textual `{{args}}` substitution, which is unsafe for inputs that
+# contain `$` (the substituted text gets re-expanded by bash).
+set positional-arguments
+
+# Show available commands when you run `just` with no args.
+default:
+    @just --list --unsorted
+
+
+# =============================================================================
+# Setup Commands
+# =============================================================================
+
+# One-shot first-time setup — creates .venv and installs everything
+[group('setup')]
+setup:
+    @echo "Creating virtual environment with uv..."
+    # uv venv creates a .venv/ folder using the system Python that
+    # matches `requires-python` in pyproject.toml.
+    # --allow-existing makes the recipe safe to re-run after a partial install.
+    uv venv --allow-existing
+    @echo ""
+    @echo "Installing dependencies (including dev tools)..."
+    # --all-extras pulls in every optional-dependencies group (just `dev`
+    # for us). Without this, dev tools like pytest do not get installed.
+    uv sync --all-extras
+    @echo ""
+    @echo "✓ Setup complete!"
+    @echo ""
+    @echo "Try it out:"
+    @echo "  just run -- https://example.com"
+    @echo "  just test"
+
+# Install runtime dependencies only (no dev tools)
+[group('setup')]
+install:
+    uv sync
+
+# Install runtime + dev dependencies
+[group('setup')]
+install-dev:
+    uv sync --all-extras
+
+
+# =============================================================================
+# Testing & Quality Checks
+# =============================================================================
+
+# Run the test suite
+[group('test')]
+test:
+    @echo "Running tests..."
+    # `uv run` runs a command inside the project's virtual environment
+    # without us having to `source .venv/bin/activate` first.
+    uv run pytest
+
+# Run all linters in sequence (ruff + pylint + mypy)
+[group('test')]
+lint:
+    @echo "=== Ruff ==="
+    uv run ruff check http_headers_scanner.py test_http_headers_scanner.py
+    @echo ""
+    @echo "=== Pylint ==="
+    uv run pylint http_headers_scanner.py
+    @echo ""
+    @echo "=== Mypy ==="
+    uv run mypy http_headers_scanner.py
+    @echo ""
+    @echo "✓ All linters passed"
+
+# Auto-format every Python file with yapf
+[group('test')]
+format:
+    @echo "Formatting code with yapf..."
+    # -i = in place. Edits the files directly instead of printing diffs.
+    uv run yapf -i http_headers_scanner.py test_http_headers_scanner.py
+    @echo "✓ Code formatted"
+
+# Auto-fix what ruff can fix on its own (unused imports, etc.)
+[group('test')]
+fix:
+    uv run ruff check http_headers_scanner.py test_http_headers_scanner.py --fix
+
+
+# =============================================================================
+# Run the CLI
+# =============================================================================
+
+# Run headers — pass the URL after `--`
+# Example:  just run -- https://example.com
+#           just run -- https://github.com --timeout 5
+# [no-exit-message] silences just's "Recipe `run` failed with exit
+# code N" line when the scanner exits non-zero. The scanner uses
+# exit 1 for grade C/D and exit 2 for grade F or network error —
+# meaningful CI signals, not "the recipe is broken." The exit code
+# itself is still propagated to whoever invoked just.
+[group('run')]
+[no-exit-message]
+run *args:
+    #!/usr/bin/env bash
+    # If no args were given, print a friendly usage block and exit
+    # cleanly. Without this, `just run` (no args) would invoke
+    # `uv run headers` with nothing, argparse would exit 2, and just
+    # would tack a "Recipe `run` failed" error on top — confusing for
+    # someone just trying to see how the command works.
+    if [ $# -eq 0 ]; then
+        cat <<'EOF'
+    Usage: just run -- <url> [options]
+
+    Examples:
+      just run -- https://example.com
+      just run -- https://github.com --timeout 5
+
+    See all options:
+      just run -- --help
+    EOF
+        exit 0
+    fi
+    # Forward args via "$@" — NOT via {{args}}. Why: {{args}} is a
+    # TEXTUAL substitution done by just before bash runs the script,
+    # so a URL or option value with $ in it would get those $-references
+    # expanded as bash variables and arrive at the headers CLI mangled.
+    # "$@" hands bash the original argv unchanged.
+    uv run headers "$@"
+
+
+# =============================================================================
+# Utility / Cleanup
+# =============================================================================
+
+# Delete the venv and all build / cache artifacts
+[group('utility')]
+clean:
+    rm -rf .venv
+    rm -rf __pycache__
+    rm -rf .mypy_cache .ruff_cache .pytest_cache
+    rm -rf *.egg-info build dist
+    rm -rf .coverage htmlcov
+    @echo "✓ Cleaned"
+
+# Lock the exact dependency versions to uv.lock
+[group('utility')]
+lock:
+    uv lock
+
+# Upgrade all dependencies to latest allowed versions
+[group('utility')]
+update:
+    uv lock --upgrade
+    uv sync --all-extras
+
+
+# =============================================================================
+# CI Pipeline
+# =============================================================================
+
+# Full pipeline: setup + lint + test. For first-time runs.
+[group('ci')]
+all: setup lint test
+    @echo ""
+    @echo "✓ Setup, lint, and tests all passed"
+
+# Lint + test only — what CI runs after dependencies are installed
+[group('ci')]
+ci: lint test
+    @echo "✓ CI checks passed"

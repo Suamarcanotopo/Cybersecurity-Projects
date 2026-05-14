@@ -1,0 +1,208 @@
+// ===================
+// AngelaMos | 2026
+// submit.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $space-8;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  margin-bottom: $space-4;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.form {
+  @include flex-column;
+  gap: $space-6;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-6;
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.select {
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  option {
+    background: $bg-surface-100;
+    color: $text-default;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  resize: vertical;
+  min-height: 120px;
+  line-height: $line-height-relaxed;
+  font-family: inherit;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.hint {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.actions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+  padding-top: $space-4;
+  border-top: 1px solid $border-muted;
+  margin-top: $space-2;
+}
+
+.cancelButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 $space-5;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+  text-decoration: none;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 $space-6;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.loading {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $error-default;
+  font-size: $font-size-sm;
+}

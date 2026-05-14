@@ -1,0 +1,169 @@
+// ===================
+// © AngelaMos | 2026
+// threats.module.scss
+
+// CSS module for the threats table page
+
+// Styles a filter bar with select dropdown and text input
+// (accent-bordered on focus), a scrollable table wrapper
+// with uppercase column headers, clickable rows with hover
+// highlight, monospace and truncated cell variants for IPs
+// and paths, tabular-nums score cells, centered loading and
+// empty states, and a pagination footer with previous/next
+// buttons that dim when disabled. Connects to pages/threats,
+// styles/_index
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.filters {
+  display: flex;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.select,
+.input {
+  padding: $space-2 $space-3;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  color: $text-default;
+  font-size: $font-size-sm;
+  outline: none;
+  @include transition-fast;
+
+  &:focus {
+    border-color: $accent;
+  }
+}
+
+.select {
+  min-width: 160px;
+}
+
+.input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  th {
+    text-align: left;
+    padding: $space-3 $space-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $text-lighter;
+    text-transform: uppercase;
+    letter-spacing: $tracking-wider;
+    border-bottom: 1px solid $border-default;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: $space-2-5 $space-4;
+    border-bottom: 1px solid $border-muted;
+    color: $text-light;
+  }
+}
+
+.row {
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+  }
+}
+
+.timeCell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.monoCell {
+  font-family: monospace;
+  font-size: $font-size-xs;
+}
+
+.pathCell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: monospace;
+  font-size: $font-size-xs;
+}
+
+.scoreCell {
+  font-variant-numeric: tabular-nums;
+}
+
+.loadingCell,
+.emptyCell {
+  text-align: center;
+  padding: $space-10 $space-4;
+  color: $text-muted;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paginationInfo {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.paginationButtons {
+  display: flex;
+  gap: $space-2;
+}
+
+.pageBtn {
+  padding: $space-2 $space-4;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  color: $text-light;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover {
+      background: $bg-surface-100;
+      color: $text-light;
+    }
+  }
+}

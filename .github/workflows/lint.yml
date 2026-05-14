@@ -1,0 +1,398 @@
+name: Lint & Type Check
+
+on:
+  push:
+    branches: [ 'main' ]
+  pull_request:
+    branches: [ '*' ]
+  workflow_dispatch:
+
+
+jobs:
+  lint:
+    name: Lint ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Python (ruff) - Beginner
+          - name: caesar-cipher
+            type: ruff
+            path: PROJECTS/beginner/caesar-cipher
+          - name: keylogger
+            type: ruff
+            path: PROJECTS/beginner/keylogger
+          - name: dns-lookup
+            type: ruff
+            path: PROJECTS/beginner/dns-lookup
+          - name: metadata-scrubber-tool
+            type: ruff
+            path: PROJECTS/beginner/metadata-scrubber-tool
+          - name: network-traffic-analyzer
+            type: ruff
+            path: PROJECTS/beginner/network-traffic-analyzer/python
+          - name: base64-tool
+            type: ruff
+            path: PROJECTS/beginner/base64-tool
+          - name: c2-beacon-backend
+            type: ruff
+            path: PROJECTS/beginner/c2-beacon/backend
+          # Python (ruff) - Intermediate
+          - name: api-security-scanner-backend
+            type: ruff
+            path: PROJECTS/intermediate/api-security-scanner/backend
+          - name: siem-dashboard-backend
+            type: ruff
+            path: PROJECTS/intermediate/siem-dashboard/backend
+          # Python (ruff) - Advanced
+          - name: bug-bounty-platform-backend
+            type: ruff
+            path: PROJECTS/advanced/bug-bounty-platform/backend
+          - name: encrypted-p2p-chat-backend
+            type: ruff
+            path: PROJECTS/advanced/encrypted-p2p-chat/backend
+          - name: api-rate-limiter
+            type: ruff
+            path: PROJECTS/advanced/api-rate-limiter
+          - name: ai-threat-detection-backend
+            type: ruff
+            path: PROJECTS/advanced/ai-threat-detection/backend
+          - name: linux-ebpf-security-tracer
+            type: ruff
+            path: PROJECTS/beginner/linux-ebpf-security-tracer
+          - name: dlp-scanner
+            type: ruff
+            path: PROJECTS/intermediate/dlp-scanner
+          # Biome (frontend)
+          - name: bug-bounty-platform-frontend
+            type: biome
+            path: PROJECTS/advanced/bug-bounty-platform/frontend
+          - name: c2-beacon-frontend
+            type: biome
+            path: PROJECTS/beginner/c2-beacon/frontend
+          - name: api-security-scanner-frontend
+            type: biome
+            path: PROJECTS/intermediate/api-security-scanner/frontend
+          - name: siem-dashboard-frontend
+            type: biome
+            path: PROJECTS/intermediate/siem-dashboard/frontend
+          - name: encrypted-p2p-chat-frontend
+            type: biome
+            path: PROJECTS/advanced/encrypted-p2p-chat/frontend
+          # Go
+          - name: simple-vulnerability-scanner
+            type: go
+            path: PROJECTS/beginner/simple-vulnerability-scanner
+          - name: docker-security-audit
+            type: go
+            path: PROJECTS/intermediate/docker-security-audit
+          - name: secrets-scanner
+            type: go
+            path: PROJECTS/intermediate/secrets-scanner
+          # Nim
+          - name: credential-enumeration
+            type: nim
+            path: PROJECTS/intermediate/credential-enumeration
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.path }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Ruff Setup
+    - name: Set up Python
+      if: matrix.type == 'ruff'
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install ruff
+      if: matrix.type == 'ruff'
+      run: pip install ruff
+
+    # Biome Setup
+    - name: Setup Node.js
+      if: matrix.type == 'biome'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Setup pnpm
+      if: matrix.type == 'biome'
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+
+    - name: Cache pnpm store
+      if: matrix.type == 'biome'
+      uses: actions/cache@v4
+      with:
+        path: ~/.local/share/pnpm/store/v10
+        key: ${{ runner.os }}-pnpm-${{ matrix.name }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', matrix.path)) }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-${{ matrix.name }}-
+          ${{ runner.os }}-pnpm-
+
+    - name: Install frontend dependencies
+      if: matrix.type == 'biome'
+      run: pnpm install --frozen-lockfile
+
+    # Go Setup
+    - name: Setup Go
+      if: matrix.type == 'go'
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: ${{ matrix.path }}/go.mod
+        cache-dependency-path: ${{ matrix.path }}/go.sum
+
+    - name: Install golangci-lint
+      if: matrix.type == 'go'
+      run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+
+    # Nim Setup
+    - name: Setup Nim
+      if: matrix.type == 'nim'
+      run: |
+        curl https://nim-lang.org/choosenim/init.sh -sSf | bash -s -- -y
+        echo "$HOME/.nimble/bin" >> $GITHUB_PATH
+
+    - name: Install nph
+      if: matrix.type == 'nim'
+      run: nimble install -y nph
+
+    # Ruff Linting
+    - name: Run ruff
+      if: matrix.type == 'ruff'
+      id: ruff
+      run: |
+        echo "Running ruff check..."
+        if ruff check . > ruff-output.txt 2>&1; then
+          echo "RUFF_PASSED=true" >> $GITHUB_ENV
+          echo "No ruff errors found!"
+        else
+          echo "RUFF_PASSED=false" >> $GITHUB_ENV
+          echo "Ruff found issues"
+        fi
+        cat ruff-output.txt
+      continue-on-error: true
+
+    # Biome Linting
+    - name: Run Biome
+      if: matrix.type == 'biome'
+      id: biome
+      run: |
+        echo "Running Biome check..."
+        if npx @biomejs/biome check . > biome-output.txt 2>&1; then
+          echo "BIOME_PASSED=true" >> $GITHUB_ENV
+          echo "No Biome errors found!"
+        else
+          echo "BIOME_PASSED=false" >> $GITHUB_ENV
+          echo "Biome found issues!"
+        fi
+        cat biome-output.txt
+      continue-on-error: true
+
+    # Go Linting
+    - name: Run golangci-lint
+      if: matrix.type == 'go'
+      id: golangci
+      run: |
+        echo "Running golangci-lint..."
+        if golangci-lint run > golangci-output.txt 2>&1; then
+          echo "GOLANGCI_PASSED=true" >> $GITHUB_ENV
+          echo "No golangci-lint errors found!"
+        else
+          echo "GOLANGCI_PASSED=false" >> $GITHUB_ENV
+          echo "golangci-lint found issues!"
+        fi
+        cat golangci-output.txt
+      continue-on-error: true
+
+    # Nim Linting
+    - name: Run nph and nim check
+      if: matrix.type == 'nim'
+      id: nim
+      run: |
+        echo "Running nph format check..."
+        NPH_OK=true
+        NIM_OK=true
+        if nph --check src/ > nim-output.txt 2>&1; then
+          echo "nph: no formatting issues"
+        else
+          NPH_OK=false
+          echo "nph: formatting issues found"
+        fi
+        echo "Running nim check..."
+        if nim check src/harvester.nim >> nim-output.txt 2>&1; then
+          echo "nim check: passed"
+        else
+          NIM_OK=false
+          echo "nim check: failed"
+        fi
+        if [[ "$NPH_OK" == "true" && "$NIM_OK" == "true" ]]; then
+          echo "NIM_PASSED=true" >> $GITHUB_ENV
+          echo "All Nim checks passed!"
+        else
+          echo "NIM_PASSED=false" >> $GITHUB_ENV
+          echo "Nim checks found issues"
+        fi
+        cat nim-output.txt
+      continue-on-error: true
+
+    # Create Summary for Ruff
+    - name: Create Ruff Lint Summary
+      if: matrix.type == 'ruff'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          if [[ "${{ env.RUFF_PASSED }}" == "true" ]]; then
+            echo '### Ruff: **Passed**'
+            echo 'No ruff issues found.'
+          else
+            echo '### Ruff: **Issues Found**'
+            echo '<details><summary>View ruff output</summary>'
+            echo ''
+            echo '```'
+            head -100 ruff-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          if [[ "${{ env.RUFF_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+        } >> $GITHUB_STEP_SUMMARY
+
+    # Create Summary for Biome
+    - name: Create Biome Lint Summary
+      if: matrix.type == 'biome'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          if [[ "${{ env.BIOME_PASSED }}" == "true" ]]; then
+            echo '### Biome: **Passed**'
+            echo 'No Biome issues found.'
+          else
+            echo '### Biome: **Issues Found**'
+            echo '<details><summary>View Biome output</summary>'
+            echo ''
+            echo '```'
+            head -100 biome-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          if [[ "${{ env.BIOME_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+        } >> $GITHUB_STEP_SUMMARY
+
+    # Create Summary for Go
+    - name: Create Go Lint Summary
+      if: matrix.type == 'go'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "true" ]]; then
+            echo '### golangci-lint: **Passed**'
+            echo 'No golangci-lint issues found.'
+          else
+            echo '### golangci-lint: **Issues Found**'
+            echo '<details><summary>View golangci-lint output</summary>'
+            echo ''
+            echo '```'
+            head -100 golangci-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+        } >> $GITHUB_STEP_SUMMARY
+
+    # Create Summary for Nim
+    - name: Create Nim Lint Summary
+      if: matrix.type == 'nim'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          if [[ "${{ env.NIM_PASSED }}" == "true" ]]; then
+            echo '### nph + nim check: **Passed**'
+            echo 'No Nim issues found.'
+          else
+            echo '### nph + nim check: **Issues Found**'
+            echo '<details><summary>View Nim output</summary>'
+            echo ''
+            echo '```'
+            head -100 nim-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          if [[ "${{ env.NIM_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+        } >> $GITHUB_STEP_SUMMARY
+
+    # Exit with proper status
+    - name: Check lint status
+      run: |
+        if [[ "${{ matrix.type }}" == "ruff" ]]; then
+          if [[ "${{ env.RUFF_PASSED }}" == "false" ]]; then
+            echo "Ruff lint checks failed"
+            exit 1
+          fi
+        elif [[ "${{ matrix.type }}" == "biome" ]]; then
+          if [[ "${{ env.BIOME_PASSED }}" == "false" ]]; then
+            echo "Biome lint checks failed"
+            exit 1
+          fi
+        elif [[ "${{ matrix.type }}" == "go" ]]; then
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "false" ]]; then
+            echo "Go lint checks failed"
+            exit 1
+          fi
+        elif [[ "${{ matrix.type }}" == "nim" ]]; then
+          if [[ "${{ env.NIM_PASSED }}" == "false" ]]; then
+            echo "Nim lint checks failed"
+            exit 1
+          fi
+        fi
+        echo "All lint checks passed"

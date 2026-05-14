@@ -1,0 +1,249 @@
+// ©AngelaMos | 2026
+// Dashboard.module.scss
+
+.root {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto auto;
+  grid-template-areas:
+    'topstrip'
+    'alertbanner'
+    'timezoneticker'
+    'main'
+    'bottomticker'
+    'statusfooter';
+  height: 100dvh;
+  width: 100vw;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at center, rgb(255, 255, 255, 1.8%) 1px, transparent 1.2px);
+  background-size: 12px 12px;
+  color: var(--fg-1);
+  overflow: hidden;
+}
+
+.grid {
+  grid-area: main;
+  display: grid;
+  grid-template-columns:
+    calc(var(--col-panel-width) + env(safe-area-inset-left))
+    1fr
+    calc(var(--col-panel-width) + env(safe-area-inset-right));
+  min-height: 0;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1px solid var(--fg-4);
+  padding-left: env(safe-area-inset-left);
+}
+
+.center {
+  position: relative;
+  overflow: hidden;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-left: 1px solid var(--fg-4);
+  padding-right: env(safe-area-inset-right);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+.group + .group {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.root.presentation {
+  .grid {
+    grid-template-columns: 280px 1fr 280px;
+  }
+
+  .left {
+    border-right: 0;
+  }
+
+  .right {
+    border-left: 0;
+  }
+}
+
+// ── Globe resize hint ─────────────────────────────────────────
+
+.center::before,
+.center::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 28px;
+  background: linear-gradient(to bottom, transparent, var(--fg-4), transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  transition: opacity 200ms;
+}
+
+.center::before { left: 4px; }
+.center::after  { right: 4px; }
+
+.center:hover::before,
+.center:hover::after {
+  opacity: 1;
+}
+
+// ── Rotate banner ─────────────────────────────────────────────
+
+.rotateBanner {
+  display: none;
+  flex-shrink: 0;
+}
+
+// ── ≤749px: stack layout ─────────────────────────────────────
+// Left → Right → Globe, full-width, page scrolls.
+
+@media (width <= 749px) {
+  .root {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100dvh;
+    overflow: hidden auto;
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: unset;
+  }
+
+  .left {
+    order: 1;
+    overflow-y: visible;
+    border-right: none;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .right {
+    order: 2;
+    overflow-y: visible;
+    border-left: none;
+    border-top: 1px solid var(--rule-strong);
+  }
+
+  .center {
+    order: 3;
+    height: 420px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--rule-strong);
+    overflow: hidden;
+  }
+
+  .center::before,
+  .center::after {
+    display: none;
+  }
+}
+
+// ── ≤440px portrait: medium phone (16 Pro Max and below) ──────
+
+@media (width <= 440px) and (orientation: portrait) {
+  :root {
+    --type-num-xl: 18px;
+    --type-num-l:  15px;
+  }
+
+  .center {
+    height: 360px;
+  }
+}
+
+// ── ≤400px portrait: small phone (16 Pro and below) ──────────
+
+@media (width <= 400px) and (orientation: portrait) {
+  :root {
+    --type-num-xl: 16px;
+    --type-num-l:  13px;
+  }
+
+  .center {
+    height: 300px;
+  }
+}
+
+// ── ≤430px portrait: rotate banner ───────────────────────────
+
+@media (width <= 430px) and (orientation: portrait) {
+  .rotateBanner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: color-mix(in sRGB, var(--amber) 10%, transparent);
+    border-bottom: 1px solid color-mix(in sRGB, var(--amber) 25%, transparent);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+}
+
+// ── Landscape ≤550px: base phone landscape ───────────────────
+// 3-column stays, timezone + status dropped, type scaled down.
+
+@media (height <= 550px) and (orientation: landscape) and (width >= 500px) {
+  :root {
+    --col-panel-width:      180px;
+    --type-num-xl:          14px;
+    --type-num-l:           13px;
+    --type-body:            9px;
+    --type-label:           9px;
+    --type-col:             8.5px;
+    --type-meta:            8.5px;
+    --letter-spacing-label: 0.07em;
+  }
+
+  .root {
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'topstrip'
+      'alertbanner'
+      'main'
+      'bottomticker';
+  }
+
+  .left,
+  .right {
+    overflow-x: hidden;
+  }
+}
+
+// ── Landscape ≤440px: compact phone landscape ────────────────
+
+@media (height <= 440px) and (orientation: landscape) and (width >= 500px) {
+  :root {
+    --col-panel-width: 160px;
+    --type-num-xl:     12px;
+    --type-num-l:      11px;
+  }
+}
+
+// ── Landscape ≤400px: very compact phone landscape ───────────
+
+@media (height <= 400px) and (orientation: landscape) and (width >= 500px) {
+  :root {
+    --col-panel-width: 145px;
+  }
+}

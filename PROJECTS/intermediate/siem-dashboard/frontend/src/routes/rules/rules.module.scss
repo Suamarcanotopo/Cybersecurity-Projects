@@ -1,0 +1,426 @@
+// ===================
+// ©AngelaMos | 2026
+// rules.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-4;
+  width: 100%;
+  max-width: 1325px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  @include flex-between;
+}
+
+.count {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.createBtn {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-4;
+  background-color: $accent;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.2);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.list {
+  @include flex-column;
+  gap: $space-3;
+}
+
+.card {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  &.selected {
+    border-color: $border-strong;
+  }
+}
+
+.cardMain {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: $space-4;
+  cursor: pointer;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-2;
+}
+
+.badge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: capitalize;
+
+  &.critical {
+    color: $severity-critical;
+    background-color: $severity-critical-bg;
+  }
+
+  &.high {
+    color: $severity-high;
+    background-color: $severity-high-bg;
+  }
+
+  &.medium {
+    color: $severity-medium;
+    background-color: $severity-medium-bg;
+  }
+
+  &.low {
+    color: $severity-low;
+    background-color: $severity-low-bg;
+  }
+
+  &.info {
+    color: $severity-info;
+    background-color: $severity-info-bg;
+  }
+}
+
+.ruleType {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  text-transform: capitalize;
+}
+
+.enabledDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+  background-color: $text-muted;
+  margin-left: auto;
+
+  &.on {
+    background-color: $status-resolved;
+  }
+}
+
+.cardTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin-bottom: $space-1;
+}
+
+.cardDesc {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  line-height: $line-height-normal;
+}
+
+.mitre {
+  display: inline-block;
+  margin-top: $space-2;
+  padding: $space-0-5 $space-2;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cardActions {
+  border-top: 1px solid $border-default;
+  padding: $space-4;
+}
+
+.conditions {
+  margin-bottom: $space-3;
+}
+
+.conditionsTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  margin-bottom: $space-2;
+}
+
+.conditionsPre {
+  padding: $space-3;
+  background-color: $bg-default;
+  border: 1px solid $border-muted;
+  border-radius: $radius-sm;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: $font-size-xs;
+  color: $text-light;
+  overflow-x: auto;
+  line-height: $line-height-relaxed;
+}
+
+.btnGroup {
+  display: flex;
+  gap: $space-2;
+}
+
+.testBtn {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.deleteBtn {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $error-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $error-default;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.testResults {
+  margin-top: $space-3;
+  display: flex;
+  gap: $space-4;
+}
+
+.testStat {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.empty {
+  text-align: center;
+  color: $text-muted;
+  padding: $space-8;
+}
+
+.cardSkeleton {
+  height: 100px;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.form {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.formHeader {
+  @include flex-between;
+  margin-bottom: $space-4;
+}
+
+.formTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.closeBtn {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+  margin-bottom: $space-4;
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+}
+
+.input {
+  height: 36px;
+  padding: 0 $space-3;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.select {
+  height: 36px;
+  padding: 0 $space-3;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: $space-3;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: $font-size-xs;
+  color: $text-default;
+  resize: vertical;
+  line-height: $line-height-relaxed;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  margin-top: $space-4;
+}
+
+.cancelBtn {
+  padding: $space-2 $space-4;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+}
+
+.submitBtn {
+  padding: $space-2 $space-4;
+  background-color: $accent;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,245 @@
+// ===================
+// ©AngelaMos | 2026
+// scenarios.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-8;
+  width: 100%;
+  max-width: 1325px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  margin-bottom: $space-4;
+}
+
+.runningList {
+  @include flex-column;
+  gap: $space-3;
+}
+
+.runningCard {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-4;
+}
+
+.runningHeader {
+  @include flex-between;
+  margin-bottom: $space-2;
+}
+
+.runningName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.runRunning {
+    color: $status-resolved;
+    background-color: $status-resolved-bg;
+  }
+
+  &.runPaused {
+    color: $status-ack;
+    background-color: $status-ack-bg;
+  }
+
+  &.runCompleted {
+    color: $text-lighter;
+    background-color: $bg-surface-200;
+  }
+
+  &.runStopped {
+    color: $text-lighter;
+    background-color: $bg-surface-200;
+  }
+
+  &.runError {
+    color: $error-default;
+    background-color: $severity-critical-bg;
+  }
+}
+
+.runningStats {
+  display: flex;
+  gap: $space-4;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  margin-bottom: $space-3;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.controlBtn {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.speedSelect {
+  height: 32px;
+  padding: 0 $space-2;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.errorMsg {
+  margin-top: $space-2;
+  font-size: $font-size-xs;
+  color: $error-default;
+}
+
+.playbookGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-4;
+
+  @include breakpoint-down('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.playbookCard {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+  @include flex-column;
+  gap: $space-2;
+}
+
+.playbookName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.playbookDesc {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  line-height: $line-height-normal;
+}
+
+.playbookMeta {
+  display: flex;
+  gap: $space-3;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.tactic {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.techniques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.technique {
+  padding: $space-0-5 $space-2;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.startBtn {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  align-self: flex-start;
+  margin-top: $space-2;
+  padding: $space-2 $space-4;
+  background-color: $accent;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.empty {
+  text-align: center;
+  color: $text-muted;
+  padding: $space-8;
+  grid-column: 1 / -1;
+}
+
+.cardSkeleton {
+  height: 160px;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}

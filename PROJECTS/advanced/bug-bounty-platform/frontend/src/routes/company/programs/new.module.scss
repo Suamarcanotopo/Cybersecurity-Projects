@@ -1,0 +1,257 @@
+// ===================
+// AngelaMos | 2026
+// new.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+  background-color: $bg-default;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $space-8;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  color: $text-light;
+  margin-bottom: $space-4;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.form {
+  @include flex-column;
+  gap: $space-6;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-6;
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+.slugWrapper {
+  display: flex;
+  align-items: center;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  overflow: hidden;
+
+  &:focus-within {
+    border-color: $border-strong;
+  }
+}
+
+.slugPrefix {
+  padding: 0 $space-3;
+  font-size: $font-size-sm;
+  color: $text-muted;
+  background: $bg-surface-200;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid $border-default;
+}
+
+.slugInput {
+  flex: 1;
+  height: 44px;
+  padding: 0 $space-3;
+  background: transparent;
+  border: none;
+  font-size: $font-size-sm;
+  color: $text-default;
+  font-family: $font-mono;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.select {
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  option {
+    background: $bg-surface-100;
+    color: $text-default;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: $space-3;
+  background: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: $line-height-relaxed;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.hint {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.row {
+  display: grid;
+  gap: $space-6;
+
+  @include breakpoint-up('md') {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+  padding-top: $space-4;
+  border-top: 1px solid $border-muted;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 $space-5;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+  text-decoration: none;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 $space-6;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

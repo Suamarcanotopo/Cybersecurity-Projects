@@ -1,0 +1,21 @@
+// ©AngelaMos | 2026
+// StaleIndicator.module.scss
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+}
+
+.live {
+  background: var(--ok);
+}
+
+.batch {
+  background: var(--amber);
+}
+
+.stale {
+  background: var(--fg-3);
+}

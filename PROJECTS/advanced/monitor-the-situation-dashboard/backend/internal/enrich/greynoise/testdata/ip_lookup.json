@@ -1,0 +1,10 @@
+{
+    "ip": "8.8.8.8",
+    "noise": false,
+    "riot": true,
+    "classification": "benign",
+    "name": "Google Public DNS",
+    "link": "https://viz.greynoise.io/ip/8.8.8.8",
+    "last_seen": "2026-05-02",
+    "message": "Success"
+}

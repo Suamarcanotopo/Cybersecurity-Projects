@@ -1,0 +1,59 @@
+// ©AngelaMos | 2026
+// BottomTicker.module.scss
+
+.ticker {
+  grid-area: bottomticker;
+  height: 32px;
+  border-top: 1px solid var(--fg-4);
+  background: var(--bg);
+  overflow: hidden;
+  position: relative;
+}
+
+.track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 48px;
+  white-space: nowrap;
+  will-change: transform;
+  animation: ticker-right 60s linear infinite;
+}
+
+@keyframes ticker-right {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100vw); }
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--type-body);
+  color: var(--fg-2);
+
+  &::after {
+    content: '·';
+    color: var(--fg-4);
+    margin-left: 8px;
+  }
+}
+
+.source {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  color: var(--fg-3);
+  text-transform: uppercase;
+}
+
+.headline {
+  color: var(--fg-2);
+}
+
+.ts {
+  font-family: var(--font-mono);
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,19 @@
+# ©AngelaMos | 2026
+# .gitignore
+
+/bin/
+/lib/
+/.shards/
+/.crystal/
+*.dwarf
+.env.local
+.env.pending
+*.pid
+/coverage/
+/tmp/
+*.log
+.DS_Store
+
+# Local-only dev docs (not committed to public repo)
+/docs/research/
+/docs/plans/

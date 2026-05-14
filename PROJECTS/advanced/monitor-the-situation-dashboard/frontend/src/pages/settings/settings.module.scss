@@ -1,0 +1,549 @@
+// ===================
+// © AngelaMos | 2026
+// settings.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  font-size: 16px;
+  min-height: calc(100vh - 56px);
+  padding: $space-10 $space-6;
+  background-color: $bg-default;
+  background-image: radial-gradient(circle, $bg-page 1px, transparent 1px);
+  background-size: 22px 22px;
+
+  @include breakpoint-down('sm') {
+    padding: $space-6 $space-4;
+  }
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-6;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: $text-lighter;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  @include transition-fast;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @include hover {
+    color: $text-default;
+  }
+}
+
+.header {
+  margin-bottom: $space-10;
+}
+
+.title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-3;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: $text-lighter;
+  line-height: $line-height-relaxed;
+  max-width: 520px;
+}
+
+.section {
+  margin-bottom: $space-10;
+}
+
+.sectionHeader {
+  @include flex-between;
+  margin-bottom: $space-5;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+}
+
+.channelList {
+  @include flex-column;
+  gap: $space-3;
+}
+
+.channelCard {
+  @include flex-between;
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  border-left-width: 3px;
+  gap: $space-4;
+  @include transition-normal;
+
+  @include hover {
+    background: $bg-surface-200;
+    border-color: $border-strong;
+  }
+
+  @include breakpoint-down('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.channelCardSlack {
+  border-left-color: #e01e5a;
+}
+
+.channelCardDiscord {
+  border-left-color: #5865f2;
+}
+
+.channelCardInvalid {
+  border-left-color: $error-default;
+}
+
+.channelLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  min-width: 0;
+}
+
+.channelIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  @include flex-center;
+  flex-shrink: 0;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.channelIconSlack {
+  background: rgb(224, 30, 90, 15%);
+  color: #e01e5a;
+}
+
+.channelIconDiscord {
+  background: rgb(88, 101, 242, 15%);
+  color: #5865f2;
+}
+
+.channelIconTelegram {
+  background: rgb(44, 165, 224, 15%);
+  color: #2ca5e0;
+}
+
+.channelInfo {
+  @include flex-column;
+  gap: $space-1;
+  min-width: 0;
+}
+
+.channelLabel {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  @include truncate;
+}
+
+.channelMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.channelType {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  font-family: $font-mono;
+}
+
+.badge {
+  font-size: $font-size-xs;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  font-weight: $font-weight-medium;
+}
+
+.badgeLinked {
+  background: rgb(74, 222, 128, 12%);
+  color: hsl(140, 60%, 55%);
+}
+
+.badgePending {
+  background: rgb(245, 158, 11, 12%);
+  color: hsl(40, 80%, 60%);
+}
+
+.badgeInvalid {
+  background: rgb(220, 38, 38, 12%);
+  color: hsl(0, 65%, 60%);
+}
+
+.channelActions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-shrink: 0;
+
+  @include breakpoint-down('sm') {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+.actionBtn {
+  height: 34px;
+  padding: 0 $space-4;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-md;
+  border: 1px solid $border-default;
+  background: transparent;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+    border-color: $border-strong;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.actionBtnDanger {
+  @include hover {
+    border-color: $error-default;
+    color: $error-light;
+    background: rgb(220, 38, 38, 8%);
+  }
+}
+
+.empty {
+  padding: $space-10;
+  text-align: center;
+  border: 1px dashed $border-default;
+  border-radius: $radius-lg;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.addBtn {
+  height: 36px;
+  padding: 0 $space-5;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-md;
+  border: 1px solid $border-strong;
+  background: transparent;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  @include hover {
+    background: $bg-surface-100;
+    color: $text-default;
+    border-color: $border-stronger;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.addBtnSlack {
+  border-color: rgb(224, 30, 90, 35%);
+  color: #e01e5a;
+
+  @include hover {
+    background: rgb(224, 30, 90, 8%);
+    border-color: rgb(224, 30, 90, 70%);
+    color: #e01e5a;
+  }
+}
+
+.addBtnDiscord {
+  border-color: rgb(88, 101, 242, 35%);
+  color: #5865f2;
+
+  @include hover {
+    background: rgb(88, 101, 242, 8%);
+    border-color: rgb(88, 101, 242, 70%);
+    color: #5865f2;
+  }
+}
+
+.form {
+  @include flex-column;
+  gap: $space-5;
+  padding: $space-6;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  margin-top: $space-4;
+}
+
+.formRow {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.formRowHalf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-5;
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  padding: 0 $space-3;
+  background: $bg-control;
+  border: 1px solid $border-control;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-stronger;
+  }
+}
+
+.fieldError {
+  font-size: $font-size-xs;
+  color: $error-default;
+}
+
+.formActions {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+  padding-top: $space-2;
+
+  @include breakpoint-down('sm') {
+    flex-direction: column-reverse;
+  }
+}
+
+.cancelBtn {
+  height: 38px;
+  padding: 0 $space-5;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-md;
+  border: 1px solid $border-default;
+  background: transparent;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+    border-color: $border-strong;
+  }
+}
+
+.submitBtn {
+  height: 38px;
+  padding: 0 $space-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-md;
+  border: none;
+  background: $white;
+  color: $black;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(0.88);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.telegramCard {
+  padding: $space-6;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-top: 1.5px solid #2ca5e0;
+  border-radius: $radius-lg;
+}
+
+.telegramCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  margin-bottom: $space-5;
+}
+
+.telegramIconWrap {
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-lg;
+  background: rgb(44, 165, 224, 15%);
+  color: #2ca5e0;
+  @include flex-center;
+  flex-shrink: 0;
+
+  svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.telegramCardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.telegramTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-1;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.telegramDesc {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+  line-height: $line-height-relaxed;
+  margin-bottom: $space-4;
+}
+
+.telegramActions {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.linkInstructions {
+  @include flex-column;
+  gap: $space-4;
+  padding: $space-5;
+  background: $bg-surface-200;
+  border-radius: $radius-md;
+  border: 1px solid $border-muted;
+  margin-top: $space-4;
+}
+
+.linkInstructionsTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: hsl(40, 80%, 60%);
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+}
+
+.linkStep {
+  font-size: $font-size-sm;
+  color: $text-light;
+  line-height: $line-height-relaxed;
+
+  code {
+    font-family: $font-mono;
+    font-size: $font-size-xs;
+    background: $bg-alternative;
+    padding: 1px $space-1-5;
+    border-radius: $radius-xs;
+    color: $text-default;
+  }
+}
+
+.webhookURLRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  background: $bg-alternative;
+  border: 1px solid $border-muted;
+  border-radius: $radius-md;
+  padding: $space-2 $space-3;
+}
+
+.webhookURL {
+  font-size: $font-size-xs;
+  font-family: $font-mono;
+  color: $text-lighter;
+  flex: 1;
+  @include truncate;
+}
+
+.copyBtn {
+  height: 26px;
+  padding: 0 $space-3;
+  font-size: $font-size-xs;
+  border-radius: $radius-sm;
+  border: 1px solid $border-default;
+  background: transparent;
+  color: $text-lighter;
+  cursor: pointer;
+  flex-shrink: 0;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-default;
+    border-color: $border-strong;
+  }
+}

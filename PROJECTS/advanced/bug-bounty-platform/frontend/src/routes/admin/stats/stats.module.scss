@@ -1,0 +1,115 @@
+// ===================
+// AngelaMos | 2026
+// stats.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  padding: $space-6;
+  min-height: calc(100vh - 56px);
+}
+
+.header {
+  margin-bottom: $space-6;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}
+
+.loading,
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+  margin-bottom: $space-6;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  @include flex-column;
+  gap: $space-2;
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.statValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+
+  &.highlight {
+    color: $accent-orange;
+  }
+}
+
+.section {
+  margin-bottom: $space-6;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-4;
+}
+
+.bountyTotal {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-semibold;
+  color: $accent-orange;
+  padding: $space-6;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  text-align: center;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-3;
+}
+
+.statusItem {
+  @include flex-between;
+  padding: $space-3 $space-4;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.statusLabel {
+  font-size: $font-size-sm;
+  color: $text-light;
+  text-transform: capitalize;
+}
+
+.statusCount {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}

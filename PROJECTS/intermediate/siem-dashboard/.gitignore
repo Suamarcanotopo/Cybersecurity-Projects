@@ -1,0 +1,17 @@
+# ©AngelaMos | 2026
+# .gitignore
+
+.env
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+node_modules/
+frontend/dist/
+.DS_Store
+/frontend/.pnpm-store

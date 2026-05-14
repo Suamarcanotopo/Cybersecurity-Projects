@@ -1,0 +1,32 @@
+[
+  {
+    "time_tag": "2026-04-25T00:00:00",
+    "Kp": 3.33,
+    "a_running": 18,
+    "station_count": 8
+  },
+  {
+    "time_tag": "2026-04-25T03:00:00",
+    "Kp": 1.33,
+    "a_running": 5,
+    "station_count": 8
+  },
+  {
+    "time_tag": "2026-04-25T06:00:00",
+    "Kp": 1.33,
+    "a_running": 5,
+    "station_count": 8
+  },
+  {
+    "time_tag": "2026-04-25T09:00:00",
+    "Kp": 0.67,
+    "a_running": 3,
+    "station_count": 8
+  },
+  {
+    "time_tag": "2026-04-25T12:00:00",
+    "Kp": 1.33,
+    "a_running": 5,
+    "station_count": 8
+  }
+]

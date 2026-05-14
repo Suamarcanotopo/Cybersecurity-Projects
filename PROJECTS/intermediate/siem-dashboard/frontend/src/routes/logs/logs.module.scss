@@ -1,0 +1,319 @@
+// ===================
+// ©AngelaMos | 2026
+// logs.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-4;
+  width: 100%;
+  max-width: 1325px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: flex;
+  gap: $space-3;
+}
+
+.select {
+  height: 36px;
+  padding: 0 $space-3;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  max-width: 320px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: $space-3;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: $text-muted;
+}
+
+.searchInput {
+  width: 100%;
+  height: 36px;
+  padding: 0 $space-8;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
+
+.clearBtn {
+  position: absolute;
+  right: $space-2;
+  top: 50%;
+  transform: translateY(-50%);
+  @include flex-center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  border-radius: $radius-sm;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-light;
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  th {
+    text-align: left;
+    padding: $space-3 $space-4;
+    font-weight: $font-weight-regular;
+    color: $text-lighter;
+    border-bottom: 1px solid $border-default;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: $space-3 $space-4;
+    color: $text-light;
+    border-bottom: 1px solid $border-muted;
+    white-space: nowrap;
+  }
+}
+
+.row {
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background-color: $bg-surface-75;
+  }
+
+  &.selected {
+    background-color: $bg-surface-100;
+  }
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: $font-size-xs;
+}
+
+.badge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: capitalize;
+
+  &.critical {
+    color: $severity-critical;
+    background-color: $severity-critical-bg;
+  }
+
+  &.high {
+    color: $severity-high;
+    background-color: $severity-high-bg;
+  }
+
+  &.medium {
+    color: $severity-medium;
+    background-color: $severity-medium-bg;
+  }
+
+  &.low {
+    color: $severity-low;
+    background-color: $severity-low-bg;
+  }
+
+  &.info {
+    color: $severity-info;
+    background-color: $severity-info-bg;
+  }
+}
+
+.empty {
+  text-align: center;
+  color: $text-muted;
+  padding: $space-8;
+}
+
+.skeleton {
+  height: 20px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-sm;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+}
+
+.pageBtn {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.pageInfo {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.detail {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.detailHeader {
+  @include flex-between;
+  margin-bottom: $space-4;
+}
+
+.detailTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.closeBtn {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-3;
+  margin-bottom: $space-4;
+}
+
+.detailField {
+  @include flex-column;
+  gap: $space-1;
+}
+
+.detailLabel {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.detailValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.detailSection {
+  margin-top: $space-4;
+}
+
+.detailSectionTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  margin-bottom: $space-2;
+}
+
+.detailPre {
+  padding: $space-3;
+  background-color: $bg-default;
+  border: 1px solid $border-muted;
+  border-radius: $radius-sm;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: $font-size-xs;
+  color: $text-light;
+  overflow-x: auto;
+  line-height: $line-height-relaxed;
+}

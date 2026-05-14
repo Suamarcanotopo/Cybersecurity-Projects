@@ -1,0 +1,23 @@
+tree
+version=v4
+num_class=1
+num_tree_per_iteration=1
+label_index=0
+max_feature_idx=0
+objective=binary sigmoid:1
+feature_names=feat0
+feature_infos=[0:1]
+
+Tree=0
+num_leaves=1
+num_cat=0
+leaf_value=0.5
+shrinkage=1
+
+end of trees
+
+feature_importances:
+
+parameters:
+[boosting: gbdt]
+end of parameters

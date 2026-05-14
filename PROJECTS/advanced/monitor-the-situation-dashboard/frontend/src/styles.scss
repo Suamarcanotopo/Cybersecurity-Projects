@@ -1,0 +1,60 @@
+// ===================
+// © AngelaMos | 2025
+// styles.scss
+// ===================
+
+@forward 'styles/tokens';
+@forward 'styles/fonts';
+@forward 'styles/mixins';
+
+@use 'styles/reset';
+@use 'styles/tokens' as *;
+@use 'styles/fonts' as *;
+
+// Ethos-aligned base for the dashboard surface. Auth pages override
+// with their own per-module styles (template residue — left alone).
+html, body {
+  background: var(--bg);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  line-height: var(--line-height-tight);
+  font-feature-settings: "tnum" 1, "cv11" 1, "ss03" 1;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--fg-4);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+}

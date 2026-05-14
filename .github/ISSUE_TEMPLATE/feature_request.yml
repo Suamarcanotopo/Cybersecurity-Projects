@@ -1,0 +1,50 @@
+name: Feature Request
+description: Suggest a new project idea or improvement
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request
+        Thanks for suggesting an improvement or new project idea.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of what you want to add or improve.
+      placeholder: Describe your idea
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Project Category
+      options:
+        - Beginner
+        - Intermediate
+        - Advanced
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why would this be valuable to the repository?
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical
+    attributes:
+      label: Technical Details
+      description: Any technical considerations or requirements.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information.

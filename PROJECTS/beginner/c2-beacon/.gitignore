@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# SQLite
+*.db
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing / Linting caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Node
+node_modules/
+frontend/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

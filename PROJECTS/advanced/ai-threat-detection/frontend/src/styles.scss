@@ -1,0 +1,39 @@
+// ===================
+// © AngelaMos | 2026
+// styles.scss
+
+// Global stylesheet entry point with root element setup
+
+// Forwards tokens, fonts, and mixins for downstream module
+// consumption, applies the CSS reset, and defines #root as
+// a full-viewport column flex container with $bg-default
+// background. The .app class sets flex: 1, column layout,
+// default background, text color, and sans font family.
+// Connects to styles/_tokens, styles/_fonts,
+// styles/_mixins, styles/_reset, main.tsx
+// ===================
+
+@forward 'styles/tokens';
+@forward 'styles/fonts';
+@forward 'styles/mixins';
+
+@use 'styles/reset';
+@use 'styles/tokens' as *;
+@use 'styles/fonts' as *;
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: $bg-default;
+}
+
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: $bg-default;
+  color: $text-default;
+  font-family: $font-sans;
+}

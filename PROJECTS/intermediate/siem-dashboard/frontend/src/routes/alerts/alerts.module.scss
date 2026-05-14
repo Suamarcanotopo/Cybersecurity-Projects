@@ -1,0 +1,357 @@
+// ===================
+// ©AngelaMos | 2026
+// alerts.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-4;
+  width: 100%;
+  max-width: 1325px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+  gap: $space-1;
+  border-bottom: 1px solid $border-default;
+  padding-bottom: $space-px;
+}
+
+.tab {
+  padding: $space-2 $space-4;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: $font-size-sm;
+  color: $text-lighter;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-light;
+  }
+
+  &.active {
+    color: $text-default;
+    border-bottom-color: $accent;
+  }
+}
+
+.list {
+  @include flex-column;
+  gap: $space-3;
+}
+
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-4;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  &.selected {
+    border-color: $accent;
+  }
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-bottom: $space-2;
+}
+
+.severityBadge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: capitalize;
+
+  &.critical {
+    color: $severity-critical;
+    background-color: $severity-critical-bg;
+  }
+
+  &.high {
+    color: $severity-high;
+    background-color: $severity-high-bg;
+  }
+
+  &.medium {
+    color: $severity-medium;
+    background-color: $severity-medium-bg;
+  }
+
+  &.low {
+    color: $severity-low;
+    background-color: $severity-low-bg;
+  }
+
+  &.info {
+    color: $severity-info;
+    background-color: $severity-info-bg;
+  }
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.statusNew {
+    color: $status-new;
+    background-color: $status-new-bg;
+  }
+
+  &.statusAcknowledged {
+    color: $status-ack;
+    background-color: $status-ack-bg;
+  }
+
+  &.statusInvestigating {
+    color: $status-investigating;
+    background-color: $status-investigating-bg;
+  }
+
+  &.statusResolved {
+    color: $status-resolved;
+    background-color: $status-resolved-bg;
+  }
+
+  &.statusFalsePositive {
+    color: $severity-info;
+    background-color: $severity-info-bg;
+  }
+}
+
+.cardTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.cardMeta {
+  display: flex;
+  gap: $space-4;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.mitre {
+  display: inline-block;
+  margin-top: $space-2;
+  padding: $space-0-5 $space-2;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.empty {
+  text-align: center;
+  color: $text-muted;
+  padding: $space-8;
+}
+
+.cardSkeleton {
+  height: 100px;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+}
+
+.pageBtn {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.pageInfo {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.detail {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.detailHeader {
+  @include flex-between;
+  margin-bottom: $space-4;
+}
+
+.detailTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.closeBtn {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.detailInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $space-3;
+  margin-bottom: $space-4;
+}
+
+.infoField {
+  @include flex-column;
+  gap: $space-1;
+}
+
+.infoLabel {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.infoValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.detailSkeleton {
+  height: 200px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-sm;
+}
+
+.actions {
+  display: flex;
+  gap: $space-2;
+  margin-bottom: $space-4;
+}
+
+.actionBtn {
+  padding: $space-2 $space-3;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.matchedEvents {
+  margin-top: $space-4;
+  border-top: 1px solid $border-default;
+  padding-top: $space-4;
+}
+
+.matchedTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  margin-bottom: $space-3;
+}
+
+.eventList {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.eventRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border: 1px solid $border-muted;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+}
+
+.eventTime {
+  font-family: 'JetBrains Mono', monospace;
+  color: $text-lighter;
+}
+
+.eventType {
+  color: $text-light;
+  flex: 1;
+}
+
+.eventIp {
+  font-family: 'JetBrains Mono', monospace;
+  color: $text-lighter;
+}

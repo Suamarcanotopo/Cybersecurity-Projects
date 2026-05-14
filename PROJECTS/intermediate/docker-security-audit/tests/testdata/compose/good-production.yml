@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:1.25.3-alpine
+    container_name: web-secure
+
+    # Run as non-root user
+    user: "1000:1000"
+
+    # Read-only root filesystem
+    read_only: true
+
+    # Temporary filesystem for cache
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+      - apparmor=docker-default
+
+    # Drop all capabilities, add only required ones
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETGID
+      - SETUID
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Network isolation
+    networks:
+      - frontend
+
+    # Only necessary ports
+    ports:
+      - "80:80"
+
+    # Safe volume mounts
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./html:/usr/share/nginx/html:ro
+
+  app:
+    image: node:18.19.0-alpine
+
+    user: "node:node"
+    read_only: true
+
+    working_dir: /app
+
+    tmpfs:
+      - /tmp
+      - /app/.npm
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - frontend
+      - backend
+
+    # Use secrets instead of environment variables
+    secrets:
+      - db_password
+      - api_key
+
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+
+    command: ["node", "server.js"]
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+
+secrets:
+  db_password:
+    external: true
+  api_key:
+    external: true

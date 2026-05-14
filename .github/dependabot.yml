@@ -1,0 +1,92 @@
+version: 2
+updates:
+  # Python projects
+  - package-ecosystem: "pip"
+    directory: "/PROJECTS/api-rate-limiter"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/PROJECTS/dns-lookup"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/PROJECTS/keylogger"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/PROJECTS/api-security-scanner/backend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "pip"
+    directory: "/PROJECTS/encrypted-p2p-chat/backend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+  # npm projects
+  - package-ecosystem: "npm"
+    directory: "/PROJECTS/api-security-scanner/frontend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/PROJECTS/encrypted-p2p-chat/frontend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  # Go projects
+  - package-ecosystem: "gomod"
+    directory: "/PROJECTS/docker-security-audit"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "12:00"
+    groups:
+      go-dependencies:
+        patterns:
+          - "*"

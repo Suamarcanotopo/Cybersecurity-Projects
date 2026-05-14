@@ -1,0 +1,160 @@
+# AngelaMos | 2026
+# .golangci.yml
+
+version: "2"
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - gosec
+    - bodyclose
+    - nilerr
+    - errorlint
+    - exhaustive
+    - gocritic
+    - funlen
+    - gocognit
+    - dupl
+    - goconst
+    - ineffassign
+    - unused
+    - unconvert
+    - unparam
+    - testifylint
+    - fatcontext
+
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: false
+      exclude-functions:
+        - (io.Closer).Close
+        - (*github.com/coder/websocket.Conn).Close
+        - (*nhooyr.io/websocket.Conn).Close
+        - encoding/json.Marshal
+
+    funlen:
+      lines: 100
+      statements: 50
+
+    gocognit:
+      min-complexity: 20
+
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: increment-decrement
+        - name: var-declaration
+        - name: package-comments
+          disabled: true
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unreachable-code
+
+    staticcheck:
+      checks:
+        - all
+
+    gosec:
+      excludes:
+        - G104  # unhandled errors — covered by errcheck where actionable
+        - G101  # hardcoded credentials — false on env-var-name maps + HTTP header constants
+        - G117  # exported field name matches secret pattern — false on every Password/APIKey/Token DTO field
+        - G115  # int conversions — values are config-bounded, no realistic overflow
+        - G304  # file inclusion via variable — false on test fixtures + safe internal paths
+        - G704  # SSRF via taint — webhook senders POST to user-supplied URLs by design
+        - G706  # log injection — using slog structured fields, not concat
+
+    testifylint:
+      disable:
+        - go-require  # fires inside httptest handler closures; known false-positive pattern
+
+    sloglint:
+      no-mixed-args: true
+      kv-only: true
+      context: all
+
+  exclusions:
+    paths:
+      - vendor
+      - testdata
+    rules:
+      # test files: don't enforce production-grade hygiene on fixtures + mocks
+      - path: _test\.go
+        linters:
+          - funlen
+          - dupl
+          - goconst
+          - gocritic
+          - errcheck
+          - exhaustive
+
+      # bodyclose: coder/websocket Dial returns a *http.Response whose body
+      # is empty by protocol — closing it isn't part of the websocket idiom
+      - path: internal/ws/
+        linters:
+          - bodyclose
+
+      # bodyclose: ratelimit.New[*http.Response](...) is a generic type param,
+      # not an actual response body — linter pattern-matches the type symbol
+      - path: internal/httpx/client\.go
+        linters:
+          - bodyclose
+
+      # main.go bootstrap is inherently long + branchy
+      - path: cmd/api/main\.go
+        linters:
+          - gocognit
+          - funlen
+
+      # auth.Login vs auth.Register: structurally similar, semantically
+      # different (different DTOs, errors, status codes). Deduping with a
+      # generic helper would obscure the code more than the duplication does.
+      - path: internal/auth/handler\.go
+        linters:
+          - dupl
+
+      # coinbase websocket state machine: handleConn is inherently branchy
+      - path: internal/collectors/coinbase/collector\.go
+        linters:
+          - gocognit
+
+formatters:
+  enable:
+    - gci        # Groups imports
+    - gofumpt    # Whitespace
+    - golines    # Vertical wrap
+  settings:
+    golines:
+      max-len: 80
+      reformat-tags: true
+    goimports:
+      local-prefixes:
+        - github.com/carterperez-dev/monitor-the-situation/backend
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/carterperez-dev)
+      custom-order: true
+    gofumpt:
+      extra-rules: true

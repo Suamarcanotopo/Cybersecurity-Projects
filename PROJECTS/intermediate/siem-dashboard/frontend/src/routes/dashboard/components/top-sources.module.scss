@@ -1,0 +1,77 @@
+// ===================
+// ©AngelaMos | 2026
+// top-sources.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.panel {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-5;
+}
+
+.title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-light;
+  margin-bottom: $space-4;
+}
+
+.bars {
+  @include flex-column;
+  gap: $space-3;
+}
+
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.barLabel {
+  flex-shrink: 0;
+  width: 120px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  @include truncate;
+}
+
+.barTrack {
+  flex: 1;
+  height: 20px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-xs;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background-color: $accent;
+  border-radius: $radius-xs;
+  transition: width $duration-slow $ease-out;
+}
+
+.barCount {
+  flex-shrink: 0;
+  width: 60px;
+  text-align: right;
+  font-size: $font-size-xs;
+  color: $text-light;
+  font-variant-numeric: tabular-nums;
+}
+
+.skeleton {
+  height: 200px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-sm;
+}
+
+.empty {
+  color: $text-muted;
+  font-size: $font-size-sm;
+  text-align: center;
+  padding: $space-8;
+}

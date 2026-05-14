@@ -1,0 +1,95 @@
+# ©AngelaMos | 2026
+# dev.compose.yml
+# Development compose — Nginx + Vite + Rust backend + PostgreSQL
+
+name: ${APP_NAME:-axumortem}-dev
+
+services:
+  nginx:
+    image: nginx:1.29-alpine
+    container_name: ${APP_NAME:-axumortem}-nginx-dev
+    ports:
+      - "${NGINX_HOST_PORT:-58495}:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/dev.nginx:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+    networks:
+      - app
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../infra/docker/vite.dev
+    container_name: ${APP_NAME:-axumortem}-frontend-dev
+    ports:
+      - "${FRONTEND_HOST_PORT:-15723}:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_modules:/app/node_modules
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-/api}
+      - VITE_APP_TITLE=${VITE_APP_TITLE:-axumortem}
+    networks:
+      - app
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../infra/docker/rust.dev
+    container_name: ${APP_NAME:-axumortem}-backend-dev
+    ports:
+      - "${BACKEND_HOST_PORT:-36968}:3000"
+    volumes:
+      - ./backend:/app
+      - cargo_registry:/usr/local/cargo/registry
+      - cargo_target:/app/target
+    environment:
+      - DATABASE_URL=postgres://axumortem:axumortem@postgres:5432/axumortem
+      - RUST_LOG=${RUST_LOG:-info,tower_http=debug}
+      - HOST=0.0.0.0
+      - PORT=3000
+      - MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE:-52428800}
+      - CORS_ORIGIN=*
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: ${APP_NAME:-axumortem}-postgres-dev
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=axumortem
+      - POSTGRES_PASSWORD=axumortem
+      - POSTGRES_DB=axumortem
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U axumortem"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - app
+    restart: unless-stopped
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  frontend_modules:
+  cargo_registry:
+  cargo_target:
+  pgdata:

@@ -1,0 +1,141 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "generated": 1777710093000,
+    "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson",
+    "title": "USGS Magnitude 2.5+ Earthquakes, Past Day",
+    "status": 200,
+    "api": "2.4.0",
+    "count": 39
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 2.8,
+        "place": "18 km NNW of Jal, New Mexico",
+        "time": 1777707261749,
+        "updated": 1777707667040,
+        "tz": null,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000shr9",
+        "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/us7000shr9.geojson",
+        "felt": null,
+        "cdi": null,
+        "mmi": null,
+        "alert": null,
+        "status": "reviewed",
+        "tsunami": 0,
+        "sig": 121,
+        "net": "us",
+        "code": "7000shr9",
+        "ids": ",us7000shr9,",
+        "sources": ",us,",
+        "types": ",origin,phase-data,",
+        "nst": 35,
+        "dmin": 0.255,
+        "rms": 0.56,
+        "gap": 57,
+        "magType": "mb_lg",
+        "type": "earthquake",
+        "title": "M 2.8 - 18 km NNW of Jal, New Mexico"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.2923,
+          32.2604,
+          5.109
+        ]
+      },
+      "id": "us7000shr9"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 2.97,
+        "place": "27 km SW of Esperanza, Puerto Rico",
+        "time": 1777705903970,
+        "updated": 1777707214900,
+        "tz": null,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/pr71515393",
+        "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/pr71515393.geojson",
+        "felt": null,
+        "cdi": null,
+        "mmi": null,
+        "alert": null,
+        "status": "reviewed",
+        "tsunami": 0,
+        "sig": 136,
+        "net": "pr",
+        "code": "71515393",
+        "ids": ",pr71515393,",
+        "sources": ",pr,",
+        "types": ",origin,phase-data,",
+        "nst": 15,
+        "dmin": 0.278,
+        "rms": 0.29,
+        "gap": 171,
+        "magType": "md",
+        "type": "earthquake",
+        "title": "M 3.0 - 27 km SW of Esperanza, Puerto Rico"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -65.6316666666667,
+          17.898,
+          7.84
+        ]
+      },
+      "id": "pr71515393"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "mag": 4.6,
+        "place": "79 km N of Calama, Chile",
+        "time": 1777702962852,
+        "updated": 1777704100040,
+        "tz": null,
+        "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000shqp",
+        "detail": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/us7000shqp.geojson",
+        "felt": null,
+        "cdi": null,
+        "mmi": null,
+        "alert": null,
+        "status": "reviewed",
+        "tsunami": 0,
+        "sig": 326,
+        "net": "us",
+        "code": "7000shqp",
+        "ids": ",us7000shqp,",
+        "sources": ",us,",
+        "types": ",origin,phase-data,",
+        "nst": 58,
+        "dmin": 0.437,
+        "rms": 1.41,
+        "gap": 37,
+        "magType": "mb",
+        "type": "earthquake",
+        "title": "M 4.6 - 79 km N of Calama, Chile"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.7738,
+          -21.7539,
+          115.882
+        ]
+      },
+      "id": "us7000shqp"
+    }
+  ],
+  "bbox": [
+    -178.5514,
+    -57.7679,
+    5.109,
+    178.8233,
+    61.621,
+    532.819
+  ]
+}

@@ -1,0 +1,185 @@
+repos:
+  # Python Ruff Checks
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
+    hooks:
+      # Beginner projects
+      - id: ruff
+        name: ruff check (caesar-cipher)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/caesar-cipher/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (keylogger)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/keylogger/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (dns-lookup)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/dns-lookup/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (metadata-scrubber-tool)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/metadata-scrubber-tool/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (network-traffic-analyzer)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/network-traffic-analyzer/python/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (base64-tool)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/base64-tool/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (c2-beacon backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/beginner/c2-beacon/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      # Intermediate projects
+      - id: ruff
+        name: ruff check (api-security-scanner backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/intermediate/api-security-scanner/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (siem-dashboard backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/intermediate/siem-dashboard/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      # Advanced projects
+      - id: ruff
+        name: ruff check (bug-bounty-platform backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/advanced/bug-bounty-platform/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (encrypted-p2p-chat backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/advanced/encrypted-p2p-chat/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (api-rate-limiter)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/advanced/api-rate-limiter/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+      - id: ruff
+        name: ruff check (ai-threat-detection backend)
+        args: [--fix, --exit-non-zero-on-fix]
+        files: ^PROJECTS/advanced/ai-threat-detection/backend/
+        exclude: (\.venv|__pycache__|\.pytest_cache)/
+
+
+  # Go golangci-lint Checks
+  - repo: local
+    hooks:
+      - id: golangci-lint-simple-vulnerability-scanner
+        name: golangci-lint (simple-vulnerability-scanner)
+        entry: bash -c 'cd PROJECTS/beginner/simple-vulnerability-scanner && golangci-lint run --fix'
+        language: system
+        files: ^PROJECTS/beginner/simple-vulnerability-scanner/
+        types: [go]
+        pass_filenames: false
+
+      - id: golangci-lint-docker-security-audit
+        name: golangci-lint (docker-security-audit)
+        entry: bash -c 'cd PROJECTS/intermediate/docker-security-audit && golangci-lint run --fix'
+        language: system
+        files: ^PROJECTS/intermediate/docker-security-audit/
+        types: [go]
+        pass_filenames: false
+
+      - id: golangci-lint-secrets-scanner
+        name: golangci-lint (secrets-scanner)
+        entry: bash -c 'cd PROJECTS/intermediate/secrets-scanner && golangci-lint run --fix'
+        language: system
+        files: ^PROJECTS/intermediate/secrets-scanner/
+        types: [go]
+        pass_filenames: false
+
+  # Biome Frontend Checks
+  - repo: local
+    hooks:
+      - id: biome-bug-bounty-platform
+        name: biome check (bug-bounty-platform frontend)
+        entry: bash -c 'cd PROJECTS/advanced/bug-bounty-platform/frontend && npx @biomejs/biome check .'
+        language: system
+        files: ^PROJECTS/advanced/bug-bounty-platform/frontend/src/
+        pass_filenames: false
+
+      - id: biome-c2-beacon
+        name: biome check (c2-beacon frontend)
+        entry: bash -c 'cd PROJECTS/beginner/c2-beacon/frontend && npx @biomejs/biome check .'
+        language: system
+        files: ^PROJECTS/beginner/c2-beacon/frontend/src/
+        pass_filenames: false
+
+      - id: biome-api-security-scanner
+        name: biome check (api-security-scanner frontend)
+        entry: bash -c 'cd PROJECTS/intermediate/api-security-scanner/frontend && npx @biomejs/biome check .'
+        language: system
+        files: ^PROJECTS/intermediate/api-security-scanner/frontend/src/
+        pass_filenames: false
+
+      - id: biome-siem-dashboard
+        name: biome check (siem-dashboard frontend)
+        entry: bash -c 'cd PROJECTS/intermediate/siem-dashboard/frontend && npx @biomejs/biome check .'
+        language: system
+        files: ^PROJECTS/intermediate/siem-dashboard/frontend/src/
+        pass_filenames: false
+
+      - id: biome-encrypted-p2p-chat
+        name: biome check (encrypted-p2p-chat frontend)
+        entry: bash -c 'cd PROJECTS/advanced/encrypted-p2p-chat/frontend && npx @biomejs/biome check .'
+        language: system
+        files: ^PROJECTS/advanced/encrypted-p2p-chat/frontend/src/
+        pass_filenames: false
+
+  # Nim nph Checks
+  - repo: local
+    hooks:
+      - id: nph-credential-enumeration
+        name: nph check (credential-enumeration)
+        entry: bash -c 'cd PROJECTS/intermediate/credential-enumeration && nph --check src/'
+        language: system
+        files: ^PROJECTS/intermediate/credential-enumeration/src/
+        pass_filenames: false
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-json
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-toml
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-ast
+        exclude: (\.pnpm-store|node_modules|\.venv)/
+      - id: check-symlinks
+        exclude: (\.pnpm-store|node_modules)/
+      - id: end-of-file-fixer
+        exclude: (\.pnpm-store|node_modules)/
+      - id: trailing-whitespace
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-illegal-windows-names
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-executables-have-shebangs
+        exclude: (\.pnpm-store|node_modules)/
+      - id: check-shebang-scripts-are-executable
+        exclude: (\.pnpm-store|node_modules)/

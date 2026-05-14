@@ -1,0 +1,246 @@
+// ===================
+// © AngelaMos | 2026
+// settings.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6 $space-4;
+  background-color: $bg-content-base;
+  background-image: radial-gradient(
+    circle,
+    $bg-content-dot 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+
+  @include breakpoint-up('md') {
+    padding: $space-8 $space-6;
+  }
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: $space-8;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.section {
+  margin-bottom: $space-10;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  padding: $space-6;
+
+  @include breakpoint-up('md') {
+    padding: $space-8;
+  }
+}
+
+.sectionHeader {
+  margin-bottom: $space-6;
+  padding-bottom: $space-4;
+  border-bottom: 1px solid $border-muted;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-1;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+  line-height: $line-height-relaxed;
+}
+
+.form {
+  @include flex-column;
+  gap: $space-5;
+}
+
+.field {
+  @include flex-column;
+  gap: $space-2;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+}
+
+.input {
+  width: 100%;
+  height: 48px;
+  padding: 0 $space-4;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: $text-lighter;
+  }
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.eyeButton {
+  position: absolute;
+  right: $space-3;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  padding: $space-1;
+  @include transition-fast;
+
+  &:hover {
+    color: $text-default;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.hint {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 $space-5;
+  background-color: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  cursor: pointer;
+  @include transition-fast;
+  width: fit-content;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.dangerZone {
+  @include flex-column;
+  gap: $space-4;
+}
+
+.dangerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+  padding: $space-4;
+  background: $bg-surface-200;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+
+  @include breakpoint-down('sm') {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.dangerContent {
+  flex: 1;
+}
+
+.dangerTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin-bottom: $space-1;
+}
+
+.dangerDescription {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+  line-height: $line-height-relaxed;
+}
+
+.dangerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 $space-5;
+  background-color: transparent;
+  border: 1px solid $border-strong;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $error-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background-color: $bg-selection;
+    border-color: $error-default;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @include breakpoint-down('sm') {
+    width: 100%;
+  }
+}

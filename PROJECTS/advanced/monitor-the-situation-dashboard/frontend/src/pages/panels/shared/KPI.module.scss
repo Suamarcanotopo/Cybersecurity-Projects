@@ -1,0 +1,24 @@
+// ©AngelaMos | 2026
+// KPI.module.scss
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 8px;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: var(--type-num-l);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-1);
+  line-height: 1;
+}
+
+.label {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}

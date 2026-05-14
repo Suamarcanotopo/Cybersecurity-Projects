@@ -1,0 +1,23 @@
+# ©AngelaMos | 2026
+# demo-full.cr.example
+
+# Tier 2 demo config: docker-compose stack on localhost.
+# Copy to demo-full.cr and load via `cre run --config=...` (full config loader
+# wired in a future iteration).
+
+# Database:
+#   DATABASE_URL=postgres://cre:cre@localhost:5432/cre
+
+# AWS Secrets Manager (LocalStack):
+#   AWS_ACCESS_KEY_ID=test
+#   AWS_SECRET_ACCESS_KEY=test
+#   AWS_REGION=us-east-1
+#   AWS_ENDPOINT=http://localhost:4566
+
+# Vault:
+#   VAULT_ADDR=http://localhost:8200
+#   VAULT_TOKEN=dev-root-token
+
+# GitHub (fake API):
+#   GITHUB_API_BASE=http://localhost:7000
+#   GITHUB_TOKEN=ghp_admin_fake

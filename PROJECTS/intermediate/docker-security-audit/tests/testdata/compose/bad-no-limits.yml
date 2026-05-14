@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: python:3.11
+
+    # MEDIUM: No memory limits - can OOM kill host
+    # MEDIUM: No CPU limits - can starve other containers
+    # MEDIUM: No PID limits - fork bomb possible
+
+    # MEDIUM: No restart policy
+
+    # MEDIUM: No health check
+
+    # MEDIUM: Running as root (no user directive)
+
+    # MEDIUM: No read-only root filesystem
+
+    # MEDIUM: No security options
+
+    # MEDIUM: Unnecessary capabilities (none dropped)
+
+    ports:
+      - "8000:8000"
+
+    command: python -m http.server 8000

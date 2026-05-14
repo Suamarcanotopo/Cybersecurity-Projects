@@ -1,0 +1,29 @@
+// ©AngelaMos | 2026
+// ISSPanel.module.scss
+
+.row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 8px;
+  padding: 4px 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--type-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.value {
+  color: var(--fg-1);
+}
+
+.muted {
+  color: var(--fg-3);
+}

@@ -1,0 +1,198 @@
+"""
+©AngelaMos | 2026
+exception_handlers.py
+"""
+
+import logging
+
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+
+from app.core.exceptions import (
+    AuthenticationError,
+    ChallengeExpiredError,
+    CredentialNotFoundError,
+    CredentialVerificationError,
+    DatabaseError,
+    InvalidDataError,
+    UserExistsError,
+    UserInactiveError,
+    UserNotFoundError,
+)
+
+
+logger = logging.getLogger(__name__)
+
+
+async def user_exists_handler(
+    request: Request,
+    exc: UserExistsError
+) -> JSONResponse:
+    """
+    Handle UserExistsError exceptions
+    """
+    logger.warning("User exists error on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_409_CONFLICT,
+        content = {"detail": exc.message},
+    )
+
+
+async def user_not_found_handler(
+    request: Request,
+    exc: UserNotFoundError
+) -> JSONResponse:
+    """
+    Handle UserNotFoundError exceptions
+    """
+    logger.warning("User not found on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_404_NOT_FOUND,
+        content = {"detail": exc.message},
+    )
+
+
+async def user_inactive_handler(
+    request: Request,
+    exc: UserInactiveError
+) -> JSONResponse:
+    """
+    Handle UserInactiveError exceptions
+    """
+    logger.warning(
+        "Inactive user access attempt on %s: %s",
+        request.url,
+        exc.message,
+    )
+    return JSONResponse(
+        status_code = status.HTTP_403_FORBIDDEN,
+        content = {"detail": exc.message},
+    )
+
+
+async def credential_not_found_handler(
+    request: Request,
+    exc: CredentialNotFoundError
+) -> JSONResponse:
+    """
+    Handle CredentialNotFoundError exceptions
+    """
+    logger.warning("Credential not found on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_404_NOT_FOUND,
+        content = {"detail": exc.message},
+    )
+
+
+async def credential_verification_handler(
+    request: Request,
+    exc: CredentialVerificationError
+) -> JSONResponse:
+    """
+    Handle CredentialVerificationError exceptions
+    """
+    logger.error(
+        "Credential verification failed on %s: %s",
+        request.url,
+        exc.message,
+    )
+    return JSONResponse(
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        content = {"detail": exc.message},
+    )
+
+
+async def challenge_expired_handler(
+    request: Request,
+    exc: ChallengeExpiredError
+) -> JSONResponse:
+    """
+    Handle ChallengeExpiredError exceptions
+    """
+    logger.warning("Challenge expired on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_400_BAD_REQUEST,
+        content = {"detail": exc.message},
+    )
+
+
+async def database_error_handler(
+    request: Request,
+    exc: DatabaseError
+) -> JSONResponse:
+    """
+    Handle DatabaseError exceptions
+    """
+    logger.error("Database error on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content = {"detail": "Internal server error"},
+    )
+
+
+async def authentication_error_handler(
+    request: Request,
+    exc: AuthenticationError
+) -> JSONResponse:
+    """
+    Handle AuthenticationError exceptions
+    """
+    logger.warning("Authentication error on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_401_UNAUTHORIZED,
+        content = {"detail": exc.message},
+    )
+
+
+async def invalid_data_handler(
+    request: Request,
+    exc: InvalidDataError
+) -> JSONResponse:
+    """
+    Handle InvalidDataError exceptions
+    """
+    logger.warning("Invalid data on %s: %s", request.url, exc.message)
+    return JSONResponse(
+        status_code = status.HTTP_400_BAD_REQUEST,
+        content = {"detail": exc.message},
+    )
+
+
+async def rate_limit_exceeded_handler(
+    request: Request,
+    exc: RateLimitExceeded,
+) -> JSONResponse:
+    """
+    Handle slowapi RateLimitExceeded with a 429 response
+    """
+    logger.warning(
+        "Rate limit exceeded on %s: %s",
+        request.url,
+        exc.detail,
+    )
+    return JSONResponse(
+        status_code = status.HTTP_429_TOO_MANY_REQUESTS,
+        content = {"detail": f"Rate limit exceeded: {exc.detail}"},
+    )
+
+
+def register_exception_handlers(app: FastAPI) -> None:
+    """
+    Register all custom exception handlers with FastAPI app
+    """
+    app.add_exception_handler(UserExistsError, user_exists_handler)
+    app.add_exception_handler(UserNotFoundError, user_not_found_handler)
+    app.add_exception_handler(UserInactiveError, user_inactive_handler)
+    app.add_exception_handler(
+        CredentialNotFoundError,
+        credential_not_found_handler,
+    )
+    app.add_exception_handler(
+        CredentialVerificationError,
+        credential_verification_handler,
+    )
+    app.add_exception_handler(ChallengeExpiredError, challenge_expired_handler)
+    app.add_exception_handler(DatabaseError, database_error_handler)
+    app.add_exception_handler(AuthenticationError, authentication_error_handler)
+    app.add_exception_handler(InvalidDataError, invalid_data_handler)

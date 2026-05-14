@@ -1,0 +1,35 @@
+# ©AngelaMos | 2026
+# shard.yml
+
+name: cre
+version: 0.1.0
+description: |
+  Credential Rotation Enforcer - tracks and enforces credential rotation
+  policies across cloud secret managers, vaults, and developer tooling.
+authors:
+  - Carter Perez <carterperez2222@gmail.com>
+license: MIT
+crystal: ">= 1.20.0"
+
+targets:
+  cre:
+    main: src/cre.cr
+
+dependencies:
+  db:
+    github: crystal-lang/crystal-db
+    version: ~> 0.9
+  pg:
+    github: will/crystal-pg
+    version: ~> 0.9
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: ~> 0.9
+  tourmaline:
+    github: protoncr/tourmaline
+    version: ~> 0.28
+
+development_dependencies:
+  webmock:
+    github: manastech/webmock.cr
+    version: ~> 0.9

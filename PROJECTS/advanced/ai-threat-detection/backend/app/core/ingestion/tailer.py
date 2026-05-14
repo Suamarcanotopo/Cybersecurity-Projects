@@ -1,0 +1,294 @@
+"""
+©AngelaMos | 2026
+tailer.py
+
+Watchdog-based nginx log file tailer with rotation
+detection and position persistence pushing raw lines
+into an asyncio queue
+
+_LogHandler extends FileSystemEventHandler to tail a single
+target file: _open_target restores position from a JSON
+position file (inode + offset) if available, otherwise
+seeks to EOF. on_modified reads new lines via
+_read_new_lines and checks inode changes for rotation,
+on_moved handles rename-based rotation (access.log ->
+access.log.1), on_created handles new-file rotation.
+_save_position persists the current inode and file offset
+after each batch of reads. Lines are pushed via
+call_soon_threadsafe into the asyncio queue, with QueueFull
+drops logged. LogTailer wraps _LogHandler with a
+PollingObserver (2s interval) watching the target's parent
+directory, providing start/stop lifecycle and is_active
+
+Connects to:
+  factory.py            - started/stopped in lifespan
+  core/ingestion/
+    pipeline            - feeds pipeline.raw_queue
+  config.py             - settings.nginx_log_path
+"""
+
+import asyncio
+import json
+import logging
+import os
+from io import TextIOWrapper
+from pathlib import Path
+
+from watchdog.events import (
+    FileCreatedEvent,
+    FileModifiedEvent,
+    FileMovedEvent,
+    FileSystemEventHandler,
+)
+from watchdog.observers.polling import PollingObserver
+
+logger = logging.getLogger(__name__)
+
+
+class _LogHandler(FileSystemEventHandler):
+    """
+    Watchdog event handler that detects modifications and log rotation
+    for a single target file, pushing new lines into an asyncio.Queue.
+    """
+
+    def __init__(
+        self,
+        target: str,
+        queue: asyncio.Queue[str | None],
+        loop: asyncio.AbstractEventLoop,
+        position_path: Path | None = None,
+    ) -> None:
+        super().__init__()
+        self._target = target
+        self._queue = queue
+        self._loop = loop
+        self._file: TextIOWrapper | None = None
+        self._inode: int | None = None
+        self._position_path = position_path
+        self._open_target()
+
+    def _open_target(self) -> None:
+        """
+        Open the target log file, restoring saved position
+        if the inode matches, otherwise seeking to EOF
+        """
+        try:
+            self._file = open(  # noqa: SIM115
+                self._target, encoding="utf-8", errors="replace")
+            self._inode = os.stat(self._target).st_ino
+
+            saved = self._load_position()
+            if (
+                saved is not None
+                and saved["inode"] == self._inode
+            ):
+                self._file.seek(saved["offset"])
+                logger.info(
+                    "Tailing %s (inode %s) resumed at offset %d",
+                    self._target,
+                    self._inode,
+                    saved["offset"],
+                )
+            else:
+                self._file.seek(0, os.SEEK_END)
+                logger.info(
+                    "Tailing %s (inode %s) from EOF",
+                    self._target,
+                    self._inode,
+                )
+        except FileNotFoundError:
+            logger.warning(
+                "Log file %s not found — waiting for creation",
+                self._target,
+            )
+            self._file = None
+            self._inode = None
+
+    def _load_position(self) -> dict[str, int] | None:
+        """
+        Read saved (inode, offset) from the position file
+        """
+        if self._position_path is None:
+            return None
+        try:
+            data = json.loads(
+                self._position_path.read_text(encoding="utf-8"),
+            )
+            return {
+                "inode": data["inode"],
+                "offset": data["offset"],
+            }
+        except (FileNotFoundError, KeyError, json.JSONDecodeError):
+            return None
+
+    def _save_position(self) -> None:
+        """
+        Persist current inode and file offset to disk
+        """
+        if (
+            self._position_path is None
+            or self._file is None
+            or self._inode is None
+        ):
+            return
+        try:
+            self._position_path.write_text(
+                json.dumps({
+                    "inode": self._inode,
+                    "offset": self._file.tell(),
+                }),
+                encoding="utf-8",
+            )
+        except OSError:
+            logger.debug("Failed to save tailer position")
+
+    def _enqueue(self, line: str) -> None:
+        """
+        Push one line into the queue, logging drops on full queue
+        """
+        try:
+            self._queue.put_nowait(line)
+        except asyncio.QueueFull:
+            logger.warning("Raw queue full — log line dropped")
+
+    def _read_new_lines(self) -> None:
+        """
+        Read all new complete lines from the current file position
+        """
+        if self._file is None:
+            return
+
+        for line in self._file:
+            stripped = line.rstrip("\n\r")
+            if stripped:
+                self._loop.call_soon_threadsafe(self._enqueue, stripped)
+
+        self._save_position()
+
+    def _handle_rotation(self) -> None:
+        """
+        Finish reading the old file, then reopen the target at position 0.
+        """
+        self._read_new_lines()
+
+        if self._file is not None:
+            self._file.close()
+
+        try:
+            self._file = open(  # noqa: SIM115
+                self._target, encoding="utf-8", errors="replace")
+            self._inode = os.stat(self._target).st_ino
+            logger.info("Rotated to new %s (inode %s)", self._target,
+                        self._inode)
+        except FileNotFoundError:
+            self._file = None
+            self._inode = None
+
+    def _inode_changed(self) -> bool:
+        """
+        Check whether the target file's inode differs from the one we opened.
+        """
+        try:
+            current_inode = os.stat(self._target).st_ino
+            return current_inode != self._inode
+        except FileNotFoundError:
+            return False
+
+    def on_modified(
+            self, event: FileModifiedEvent) -> None:  # type: ignore[override]
+        """
+        Handle new data appended to the log file.
+        """
+        if not isinstance(event, FileModifiedEvent) or event.is_directory:
+            return
+
+        if Path(str(event.src_path)).resolve() != Path(self._target).resolve():
+            return
+
+        if self._inode_changed():
+            self._handle_rotation()
+            return
+
+        self._read_new_lines()
+
+    def on_moved(self,
+                 event: FileMovedEvent) -> None:  # type: ignore[override]
+        """
+        Handle log rotation via rename (access.log -> access.log.1).
+        """
+        if not isinstance(event, FileMovedEvent):
+            return
+
+        if Path(str(event.src_path)).resolve() == Path(self._target).resolve():
+            logger.info("Log rotated: %s -> %s", event.src_path,
+                        event.dest_path)
+            self._handle_rotation()
+
+    def on_created(self,
+                   event: FileCreatedEvent) -> None:  # type: ignore[override]
+        """
+        Handle log rotation where a new file is created at the target path.
+        """
+        if not isinstance(event, FileCreatedEvent) or event.is_directory:
+            return
+
+        if Path(str(event.src_path)).resolve() == Path(self._target).resolve():
+            logger.info("New log file created: %s", event.src_path)
+            self._handle_rotation()
+
+    def close(self) -> None:
+        """
+        Close the underlying file handle.
+        """
+        if self._file is not None:
+            self._file.close()
+            self._file = None
+
+
+class LogTailer:
+    """
+    Watchdog-based nginx log tailer that pushes raw lines
+    into an asyncio.Queue for downstream processing.
+    """
+
+    def __init__(
+        self,
+        log_path: str,
+        queue: asyncio.Queue[str | None],
+        loop: asyncio.AbstractEventLoop,
+        position_path: Path | None = None,
+    ) -> None:
+        self._log_path = log_path
+        self._handler = _LogHandler(
+            log_path, queue, loop, position_path,
+        )
+        self._observer = PollingObserver(timeout=2)
+        self._started = False
+
+    def start(self) -> None:
+        """
+        Begin watching the log file's parent directory for changes.
+        """
+        watch_dir = str(Path(self._log_path).resolve().parent)
+        self._observer.schedule(self._handler, watch_dir, recursive=False)
+        self._observer.start()
+        self._started = True
+        logger.info("LogTailer started — watching %s", watch_dir)
+
+    def stop(self) -> None:
+        """
+        Stop the watchdog observer and close file handles.
+        """
+        if self._started:
+            self._observer.stop()
+            self._observer.join(timeout=5)
+            self._started = False
+        self._handler.close()
+        logger.info("LogTailer stopped")
+
+    @property
+    def is_active(self) -> bool:
+        """
+        Whether the tailer is currently running.
+        """
+        return self._started and self._observer.is_alive()

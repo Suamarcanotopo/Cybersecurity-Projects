@@ -1,0 +1,9 @@
+{
+  "channel": "heartbeats",
+  "client_id": "",
+  "timestamp": "2026-05-01T22:30:00.000Z",
+  "sequence_num": 12346,
+  "events": [
+    {"current_time": "2026-05-01T22:30:00.000Z", "heartbeat_counter": 42}
+  ]
+}

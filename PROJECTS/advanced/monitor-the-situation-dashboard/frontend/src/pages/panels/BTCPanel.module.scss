@@ -1,0 +1,72 @@
+// ©AngelaMos | 2026
+// BTCPanel.module.scss
+
+.hero {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px;
+}
+
+.price {
+  font-family: var(--font-mono);
+  font-size: var(--type-num-xl);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-1);
+  line-height: 1;
+}
+
+.unit {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  color: var(--fg-3);
+  text-transform: uppercase;
+}
+
+.changes {
+  padding: 0 8px;
+}
+
+.change {
+  display: grid;
+  grid-template-columns: 36px auto;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--type-body);
+  padding: var(--row-py) 0;
+}
+
+.changeLabel {
+  font-family: var(--font-sans);
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.changeValue {
+  color: var(--fg-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.up   { color: var(--ok); }
+.down { color: #f87171; }
+
+@keyframes flash-up {
+  0%   { color: var(--ok); }
+  100% { color: var(--fg-1); }
+}
+
+@keyframes flash-down {
+  0%   { color: #f87171; }
+  100% { color: var(--fg-1); }
+}
+
+.flashUp {
+  animation: flash-up 600ms ease-out forwards;
+}
+
+.flashDown {
+  animation: flash-down 600ms ease-out forwards;
+}

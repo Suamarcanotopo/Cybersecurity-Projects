@@ -1,0 +1,173 @@
+// ===================
+// © AngelaMos | 2026
+// dashboard.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  @include flex-between;
+  margin-bottom: $space-6;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+}
+
+.statusDot {
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    width: 10px;
+    height: 10px;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  &.online {
+    color: $accent-green;
+  }
+
+  &.offline {
+    color: $accent-red;
+  }
+}
+
+.count {
+  font-size: $font-size-sm;
+  font-family: $font-mono;
+  color: $text-lighter;
+}
+
+.countValue {
+  color: $accent-green;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  background: $bg-surface-75;
+}
+
+.table {
+  width: 100%;
+  font-size: $font-size-sm;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: $space-3 $space-4;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  th {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $accent-green;
+    text-transform: uppercase;
+    letter-spacing: $tracking-wide;
+    border-bottom: 1px solid $border-default;
+    background: $bg-surface-100;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid $border-muted;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.row {
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $border-strong;
+    outline-offset: -2px;
+  }
+}
+
+.cellId {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.cellMono {
+  font-family: $font-mono;
+}
+
+.badge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.badgeOnline {
+  color: $accent-green;
+  background: $accent-green-dim;
+}
+
+.badgeOffline {
+  color: $accent-red;
+  background: $accent-red-dim;
+}
+
+.empty {
+  @include flex-column-center;
+  padding: $space-20 $space-6;
+  color: $text-muted;
+  gap: $space-3;
+}
+
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: $space-2;
+}
+
+.emptyTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+}
+
+.emptyDesc {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  max-width: 320px;
+  text-align: center;
+}

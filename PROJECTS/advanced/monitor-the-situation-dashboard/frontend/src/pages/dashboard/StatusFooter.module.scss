@@ -1,0 +1,117 @@
+// ©AngelaMos | 2026
+// StatusFooter.module.scss
+
+.bar {
+  grid-area: statusfooter;
+  height: 22px;
+  border-top: 1px solid var(--rule-strong);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.brand {
+  color: var(--fg-2);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.sep {
+  color: var(--fg-4);
+  flex-shrink: 0;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.live  { background: var(--ok); }
+.batch { background: var(--amber); }
+.stale { background: var(--fg-3); }
+
+.label {
+  color: var(--fg-2);
+  font-weight: 500;
+}
+
+.age {
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 9.5px;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  font-weight: 400;
+  min-width: 22px;
+}
+
+.liveText {
+  color: var(--ok);
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  font-weight: 500;
+  min-width: 22px;
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--fg-4);
+  padding-left: 12px;
+  margin-left: 4px;
+}
+
+.legendDot {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  color: var(--fg-3);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.legendSep {
+  color: var(--fg-4);
+  margin: 0 2px;
+}
+
+@media (height <= 550px) and (orientation: landscape) and (width >= 600px) {
+  .bar {
+    display: none;
+  }
+}

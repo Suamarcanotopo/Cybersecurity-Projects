@@ -1,0 +1,19 @@
+{
+    "data": {
+        "ipAddress": "118.25.6.39",
+        "isPublic": true,
+        "ipVersion": 4,
+        "isWhitelisted": false,
+        "abuseConfidenceScore": 100,
+        "countryCode": "CN",
+        "countryName": "China",
+        "usageType": "Data Center/Web Hosting/Transit",
+        "isp": "Tencent Cloud Computing",
+        "domain": "tencent.com",
+        "hostnames": [],
+        "isTor": false,
+        "totalReports": 1,
+        "numDistinctUsers": 1,
+        "lastReportedAt": "2026-04-30T12:34:56+00:00"
+    }
+}

@@ -1,0 +1,150 @@
+# ©AngelaMos | 2025
+# Development Docker Compose
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: chat-postgres-dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-chat_auth}
+      POSTGRES_USER: ${POSTGRES_USER:-chat_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_HOST_PORT:-54332}:5432"
+    networks:
+      - chat_network_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chat_user} -d ${POSTGRES_DB:-chat_auth}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  surrealdb:
+    image: surrealdb/surrealdb:v3.0.5
+    container_name: chat-surrealdb-dev
+    user: "0:0"
+    command: start --log trace --user root --pass ${SURREAL_PASSWORD:?SURREAL_PASSWORD required} rocksdb:/data/database.db
+    environment:
+      - SURREAL_USER=root
+      - SURREAL_PASS=${SURREAL_PASSWORD}
+    volumes:
+      - surreal_dev_data:/data
+    ports:
+      - "${SURREAL_HOST_PORT:-7781}:8000"
+    networks:
+      - chat_network_dev
+    healthcheck:
+      test: ["CMD", "/surreal", "isready", "--endpoint", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: chat-redis-dev
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 2gb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --loglevel warning
+    volumes:
+      - redis_dev_data:/data
+    ports:
+      - "${REDIS_HOST_PORT:-43434}:6379"
+    networks:
+      - chat_network_dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: conf/docker/dev/fastapi.docker
+    container_name: chat-backend-dev
+    environment:
+      ENV: ${ENV:-development}
+      DEBUG: ${DEBUG:-true}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY required}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-chat_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-chat_auth}
+      SURREAL_URL: ${SURREAL_URL:-ws://surrealdb:8000}
+      SURREAL_USER: ${SURREAL_USER:-root}
+      SURREAL_PASSWORD: ${SURREAL_PASSWORD}
+      SURREAL_NAMESPACE: ${SURREAL_NAMESPACE:-chat}
+      SURREAL_DATABASE: ${SURREAL_DATABASE:-production}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      RP_ID: ${RP_ID:-localhost}
+      RP_NAME: ${RP_NAME:-Encrypted P2P Chat}
+      RP_ORIGIN: ${RP_ORIGIN:-http://localhost:32342}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+      - /app/__pycache__
+    depends_on:
+      postgres:
+        condition: service_healthy
+      surrealdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - chat_network_dev
+    ports:
+      - "${BACKEND_HOST_PORT:-30200}:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: conf/docker/dev/vite.docker
+    container_name: chat-frontend-dev
+    environment:
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+      - VITE_WS_URL=${VITE_WS_URL:-ws://localhost:8000}
+      - VITE_RP_ID=${VITE_RP_ID:-localhost}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - chat_network_dev
+    ports:
+      - "${FRONTEND_DEV_PORT:-34343}:5173"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: chat-nginx-dev
+    ports:
+      - "${NGINX_HTTP_PORT:-3234}:80"
+    volumes:
+      - ./conf/nginx/dev.nginx:/etc/nginx/nginx.conf:ro
+      - ./conf/nginx/http.conf:/etc/nginx/http.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - chat_network_dev
+    restart: unless-stopped
+
+networks:
+  chat_network_dev:
+    driver: bridge
+    name: chat_network_dev
+
+volumes:
+  postgres_dev_data:
+    name: chat_postgres_dev_data
+  surreal_dev_data:
+    name: chat_surreal_dev_data
+  redis_dev_data:
+    name: chat_redis_dev_data

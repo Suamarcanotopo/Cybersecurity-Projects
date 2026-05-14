@@ -1,0 +1,234 @@
+// ===================
+// AngelaMos | 2026
+// programs.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  min-height: calc(100vh - 56px);
+  padding: $space-6;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  @include flex-between;
+  margin-bottom: $space-6;
+  gap: $space-4;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin-bottom: $space-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.createBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 $space-5;
+  background: $accent-orange;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  text-decoration: none;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+}
+
+.table {
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px;
+  gap: $space-4;
+  padding: $space-3 $space-4;
+  background: $bg-surface-200;
+  border-bottom: 1px solid $border-default;
+
+  @include breakpoint-down('md') {
+    display: none;
+  }
+}
+
+.headerCell {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.tableBody {
+  @include flex-column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px;
+  gap: $space-4;
+  padding: $space-4;
+  border-bottom: 1px solid $border-muted;
+  @include transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @include hover {
+    background: $bg-surface-75;
+  }
+
+  @include breakpoint-down('md') {
+    grid-template-columns: 1fr;
+    gap: $space-3;
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  @include breakpoint-down('md') {
+    &:first-child {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+.programName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  @include truncate;
+}
+
+.programSlug {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  margin-top: $space-1;
+  font-family: $font-mono;
+}
+
+.status {
+  display: inline-flex;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &[data-status='active'] {
+    background: hsl(142 76% 36% / 20%);
+    color: hsl(142, 76%, 46%);
+  }
+
+  &[data-status='draft'] {
+    background: $bg-surface-200;
+    color: $text-lighter;
+  }
+
+  &[data-status='paused'] {
+    background: hsl(38 92% 50% / 20%);
+    color: hsl(38, 92%, 60%);
+  }
+
+  &[data-status='closed'] {
+    background: hsl(0 72% 51% / 20%);
+    color: $error-light;
+  }
+}
+
+.date {
+  font-size: $font-size-sm;
+  color: $text-light;
+}
+
+.actions {
+  display: flex;
+  gap: $space-2;
+}
+
+.actionBtn {
+  padding: $space-1-5 $space-3;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  background: transparent;
+  font-size: $font-size-xs;
+  color: $text-light;
+  text-decoration: none;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-200;
+    color: $text-default;
+  }
+}
+
+.loading {
+  @include flex-center;
+  padding: $space-12;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.error {
+  @include flex-center;
+  padding: $space-12;
+  color: $error-default;
+  font-size: $font-size-sm;
+}
+
+.empty {
+  @include flex-column-center;
+  padding: $space-12;
+  background: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  gap: $space-4;
+
+  p {
+    color: $text-muted;
+    font-size: $font-size-sm;
+  }
+}
+
+.emptyBtn {
+  display: inline-flex;
+  padding: $space-2 $space-4;
+  background: $accent-orange;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $white;
+  text-decoration: none;
+  @include transition-fast;
+
+  @include hover {
+    filter: brightness(1.1);
+  }
+}

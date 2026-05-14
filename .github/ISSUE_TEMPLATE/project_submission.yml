@@ -1,0 +1,77 @@
+name: Project Submission
+description: Submit a completed project with full source code
+title: "[PROJECT] "
+labels: ["project"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Project Submission
+        Submit a fully built cybersecurity project to the repository.
+
+  - type: input
+    id: project-name
+    attributes:
+      label: Project Name
+      description: The name of the project you're submitting.
+      placeholder: e.g., Advanced Port Scanner
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Beginner
+        - Intermediate
+        - Advanced
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Brief description of what the project does.
+      placeholder: Explain what your project does and its key features
+    validations:
+      required: true
+
+  - type: textarea
+    id: technologies
+    attributes:
+      label: Technologies Used
+      description: List the main technologies, libraries, and frameworks.
+      placeholder: e.g., Python 3.11, Scapy, FastAPI, PostgreSQL
+    validations:
+      required: true
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing
+      description: Describe how you tested the project.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: documentation
+    attributes:
+      label: Documentation Checklist
+      description: Confirm that your project includes the following
+      options:
+        - label: README with setup instructions
+          required: true
+        - label: Code comments
+          required: true
+        - label: Usage examples
+          required: true
+        - label: Security disclaimers (if applicable)
+          required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any other relevant information.

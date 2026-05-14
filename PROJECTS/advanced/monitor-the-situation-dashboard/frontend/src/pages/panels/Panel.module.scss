@@ -1,0 +1,109 @@
+// ©AngelaMos | 2026
+// Panel.module.scss
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--fg-4);
+  min-height: 0;
+  padding-left: 2px;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rule-strong);
+}
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 34px;
+  padding: 5px 10px 5px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: var(--type-label);
+  font-weight: 500;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subtitle {
+  color: var(--fg-3);
+  font-weight: 400;
+}
+
+.source {
+  font-family: var(--font-sans);
+  font-size: var(--type-meta);
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+  text-transform: lowercase;
+  font-weight: 400;
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg-3);
+  flex-shrink: 0;
+}
+
+.rawLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-3);
+
+  &:hover {
+    color: var(--fg-1);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--fg-2);
+    outline-offset: 1px;
+  }
+}
+
+.body {
+  flex: 1;
+  overflow: auto;
+  padding: 4px 0;
+  min-height: 0;
+}
+
+.accentBgp        { &::before { background: var(--accent-bgp); } }
+.accentOutage     { &::before { background: var(--accent-outage); } }
+.accentKev        { &::before { background: var(--accent-kev); } }
+.accentRansomware { &::before { background: var(--accent-ransomware); } }
+.accentDshield    { &::before { background: var(--accent-dshield); } }
+.accentQuake      { &::before { background: var(--accent-quake); } }
+.accentIss        { &::before { background: var(--accent-iss); } }
+.accentSpacewx    { &::before { background: var(--accent-spacewx); } }
+.accentCve        { &::before { background: var(--accent-cve); } }
+.accentWiki       { &::before { background: var(--accent-wiki); } }
+.accentBtc        { &::before { background: var(--accent-btc); } }
+.accentEth        { &::before { background: var(--accent-eth); } }

@@ -1,0 +1,315 @@
+# ©AngelaMos | 2026
+# phishing_c2.yml
+
+name: Phishing to C2 Beaconing
+description: >
+  Simulates a spear-phishing attack where a user opens a malicious
+  macro-enabled attachment, triggering PowerShell download cradle
+  execution, establishing persistent HTTP-based C2 beaconing, and
+  performing discovery and data staging. Based on Emotet/TrickBot
+  delivery patterns observed in TA542 campaigns.
+
+mitre_tactics:
+  - TA0001
+  - TA0002
+  - TA0011
+  - TA0007
+  - TA0009
+mitre_techniques:
+  - T1566.001
+  - T1204.002
+  - T1059.001
+  - T1071.001
+  - T1573.002
+
+events:
+  - delay_seconds: 1.0
+    source_type: proxy
+    event_type: http_request
+    source_ip: 10.0.1.50
+    dest_ip: 198.51.100.77
+    source_port: 52301
+    dest_port: 443
+    hostname: proxy-01
+    username: jdoe
+    message: User clicked phishing link from spoofed email
+    url: https://secure-docshare.example.com/invoice/view?id=8a3f
+    method: GET
+    status_code: 302
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: text/html
+    bytes_transferred: 1247
+    mitre_tactic: TA0001
+    mitre_technique: T1566.002
+
+  - delay_seconds: 0.5
+    source_type: proxy
+    event_type: http_request
+    source_ip: 10.0.1.50
+    dest_ip: 198.51.100.77
+    source_port: 52302
+    dest_port: 443
+    hostname: proxy-01
+    username: jdoe
+    message: Redirect to malicious macro-enabled document download
+    url: https://secure-docshare.example.com/dl/Invoice_Feb2026.xlsm
+    method: GET
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/vnd.ms-excel.sheet.macroEnabled.12
+    bytes_transferred: 48210
+    mitre_tactic: TA0001
+    mitre_technique: T1566.001
+
+  - delay_seconds: 5.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: User opened macro-enabled spreadsheet
+    process_name: EXCEL.EXE
+    process_id: 3284
+    parent_process: explorer.exe
+    command_line: EXCEL.EXE /e "C:\Users\jdoe\Downloads\Invoice_Feb2026.xlsm"
+    file_path: C:\Users\jdoe\Downloads\Invoice_Feb2026.xlsm
+    mitre_tactic: TA0002
+    mitre_technique: T1204.002
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Macro spawned cmd.exe child process from Excel
+    process_name: cmd.exe
+    process_id: 4102
+    parent_process: EXCEL.EXE
+    command_line: cmd.exe /c powershell.exe -NoP -NonI -W Hidden -Exec Bypass -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQA
+    mitre_tactic: TA0002
+    mitre_technique: T1059.003
+
+  - delay_seconds: 1.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Encoded PowerShell download cradle executed
+    process_name: powershell.exe
+    process_id: 4156
+    parent_process: cmd.exe
+    command_line: powershell.exe -NoP -NonI -W Hidden -Exec Bypass -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQA
+    mitre_tactic: TA0002
+    mitre_technique: T1059.001
+
+  - delay_seconds: 2.0
+    source_type: proxy
+    event_type: http_request
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.88
+    source_port: 52410
+    dest_port: 443
+    hostname: proxy-01
+    username: jdoe
+    message: PowerShell downloading second-stage payload
+    url: https://cdn-update-service.example.net/assets/update.exe
+    method: GET
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/octet-stream
+    bytes_transferred: 245760
+    mitre_tactic: TA0002
+    mitre_technique: T1105
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Second-stage payload executed from temp directory
+    process_name: update.exe
+    process_id: 4201
+    parent_process: powershell.exe
+    command_line: C:\Users\jdoe\AppData\Local\Temp\update.exe
+    file_path: C:\Users\jdoe\AppData\Local\Temp\update.exe
+    mitre_tactic: TA0002
+    mitre_technique: T1204.002
+
+  - delay_seconds: 3.0
+    source_type: dns
+    event_type: dns_query
+    source_ip: 10.0.1.50
+    dest_ip: 10.0.0.53
+    hostname: ws-jdoe
+    message: C2 domain resolution via DGA-like subdomain
+    query: r4d58hj3c.cdn-services.example.net
+    query_type: A
+    response: 203.0.113.99
+    response_code: NOERROR
+    mitre_tactic: TA0011
+    mitre_technique: T1071.004
+
+  - delay_seconds: 1.0
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53401
+    dest_port: 443
+    hostname: fw-edge-01
+    message: Outbound HTTPS to C2 infrastructure
+    action: allow
+    protocol: tcp
+    rule_name: outbound-https
+    mitre_tactic: TA0011
+    mitre_technique: T1071.001
+
+  - delay_seconds: 5.0
+    source_type: proxy
+    event_type: c2_communication
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53401
+    dest_port: 443
+    hostname: proxy-01
+    message: C2 beacon initial check-in with host fingerprint
+    url: https://cdn-services.example.net/api/v1/register
+    method: POST
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/json
+    bytes_transferred: 512
+    mitre_tactic: TA0011
+    mitre_technique: T1071.001
+
+  - delay_seconds: 10.0
+    source_type: proxy
+    event_type: c2_communication
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53402
+    dest_port: 443
+    hostname: proxy-01
+    message: C2 beacon heartbeat at regular interval
+    url: https://cdn-services.example.net/api/v1/status
+    method: POST
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/json
+    bytes_transferred: 256
+    mitre_tactic: TA0011
+    mitre_technique: T1071.001
+
+  - delay_seconds: 10.0
+    source_type: proxy
+    event_type: c2_communication
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53403
+    dest_port: 443
+    hostname: proxy-01
+    message: C2 beacon with tasking response received
+    url: https://cdn-services.example.net/api/v1/tasks
+    method: GET
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/json
+    bytes_transferred: 1893
+    mitre_tactic: TA0011
+    mitre_technique: T1071.001
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Discovery commands executed via C2 tasking
+    process_name: cmd.exe
+    process_id: 5102
+    parent_process: update.exe
+    command_line: cmd.exe /c whoami /all & net user & net group "Domain Admins" /domain
+    mitre_tactic: TA0007
+    mitre_technique: T1087.002
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Network share enumeration for data staging
+    process_name: net.exe
+    process_id: 5118
+    parent_process: update.exe
+    command_line: net.exe view \\FILE-SERVER-01 /all
+    mitre_tactic: TA0007
+    mitre_technique: T1135
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Scheduled task created for persistence
+    process_name: schtasks.exe
+    process_id: 5134
+    parent_process: update.exe
+    command_line: schtasks.exe /create /sc minute /mo 10 /tn "WindowsUpdate" /tr "C:\Users\jdoe\AppData\Local\Temp\update.exe" /f
+    mitre_tactic: TA0003
+    mitre_technique: T1053.005
+
+  - delay_seconds: 4.0
+    source_type: endpoint
+    event_type: file_access
+    source_ip: 10.0.1.50
+    hostname: ws-jdoe
+    username: jdoe
+    message: Sensitive documents staged in temp directory for exfiltration
+    process_name: powershell.exe
+    process_id: 5201
+    parent_process: update.exe
+    command_line: Compress-Archive -Path C:\Users\jdoe\Documents\*.xlsx,C:\Users\jdoe\Documents\*.docx -DestinationPath C:\Users\jdoe\AppData\Local\Temp\archive.zip
+    file_path: C:\Users\jdoe\AppData\Local\Temp\archive.zip
+    mitre_tactic: TA0009
+    mitre_technique: T1074.001
+
+  - delay_seconds: 5.0
+    source_type: proxy
+    event_type: c2_communication
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53410
+    dest_port: 443
+    hostname: proxy-01
+    message: Data exfiltration via C2 channel with large upload
+    url: https://cdn-services.example.net/api/v1/upload
+    method: POST
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/octet-stream
+    bytes_transferred: 3458731
+    mitre_tactic: TA0010
+    mitre_technique: T1041
+
+  - delay_seconds: 10.0
+    source_type: proxy
+    event_type: c2_communication
+    source_ip: 10.0.1.50
+    dest_ip: 203.0.113.99
+    source_port: 53411
+    dest_port: 443
+    hostname: proxy-01
+    message: C2 beacon continues after exfiltration
+    url: https://cdn-services.example.net/api/v1/status
+    method: POST
+    status_code: 200
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+    content_type: application/json
+    bytes_transferred: 256
+    mitre_tactic: TA0011
+    mitre_technique: T1071.001

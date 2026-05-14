@@ -1,0 +1,119 @@
+# ©AngelaMos | 2026
+# dev.compose.yml
+#
+# Development Docker Compose stack with exposed ports and
+# hot reload
+#
+# Orchestrates 4 services on the vigil_dev bridge: postgres
+# (18-alpine on host port 16969 with default devpassword),
+# redis (7.4-alpine on host port 26969 with appendonly),
+# backend (FastAPI dev build on host port 36969 with debug
+# enabled, quiet gitpython, and SKIP_AUTO_TRAIN toggle),
+# and frontend (Vite dev server on host port 46969 with
+# source bind-mount for HMR and API proxy to the backend).
+# Connects to infra/docker/fastapi.dev,
+# infra/docker/vite.dev
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: vigil-postgres-dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-angelusvigil}
+      POSTGRES_USER: ${POSTGRES_USER:-vigil}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpassword}
+    ports:
+      - "${POSTGRES_HOST_PORT:-16969}:5432"
+    volumes:
+      - postgres_dev:/var/lib/postgresql/data
+    networks:
+      - vigil_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vigil} -d ${POSTGRES_DB:-angelusvigil}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: vigil-redis-dev
+    command: redis-server --appendonly yes
+    ports:
+      - "${REDIS_HOST_PORT:-26969}:6379"
+    volumes:
+      - redis_dev:/data
+    networks:
+      - vigil_dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+
+  backend:
+    build:
+      context: .
+      dockerfile: infra/docker/fastapi.dev
+    container_name: vigil-backend-dev
+    environment:
+      ENV: development
+      DEBUG: "true"
+      LOG_LEVEL: INFO
+      API_KEY: ${API_KEY:-dev-test-key}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-vigil}:${POSTGRES_PASSWORD:-devpassword}@postgres:5432/${POSTGRES_DB:-angelusvigil}
+      REDIS_URL: redis://redis:6379
+      NGINX_LOG_PATH: /var/log/nginx/access.log
+      GEOIP_DB_PATH: /usr/share/GeoIP/GeoLite2-City.mmdb
+      GIT_PYTHON_REFRESH: quiet
+      MODEL_DIR: /app/data/models
+      SKIP_AUTO_TRAIN: ${SKIP_AUTO_TRAIN:-false}
+    ports:
+      - "${BACKEND_HOST_PORT:-36969}:8000"
+    volumes:
+      - model_data_dev:/app/data/models
+      - nginx_logs_dev:/var/log/nginx
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - vigil_dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 180s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/docker/vite.dev
+    container_name: vigil-frontend-dev
+    environment:
+      VITE_API_TARGET: http://backend:8000
+    ports:
+      - "${FRONTEND_HOST_PORT:-46969}:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules_dev:/app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - vigil_dev
+
+networks:
+  vigil_dev:
+    driver: bridge
+
+volumes:
+  postgres_dev:
+  redis_dev:
+  model_data_dev:
+  nginx_logs_dev:
+    name: vigil_dev_nginx_logs
+  frontend_node_modules_dev:

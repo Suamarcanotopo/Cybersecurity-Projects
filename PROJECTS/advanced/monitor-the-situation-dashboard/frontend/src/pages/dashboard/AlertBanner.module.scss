@@ -1,0 +1,44 @@
+// ©AngelaMos | 2026
+// AlertBanner.module.scss
+
+.banner {
+  grid-area: alertbanner;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--amber);
+  color: var(--amber-fg);
+  font-size: var(--type-body);
+  font-weight: 500;
+}
+
+.message {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--amber-fg);
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--amber-fg);
+    outline-offset: 1px;
+  }
+}

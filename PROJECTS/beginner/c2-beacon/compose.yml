@@ -1,0 +1,79 @@
+# =============================================================================
+# AngelaMos | 2026
+# compose.yml
+# =============================================================================
+# Production compose - Nginx (with built frontend) + FastAPI backend
+# =============================================================================
+
+name: ${APP_NAME:-c2-beacon}
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: infra/docker/frontend-builder.prod
+      args:
+        - VITE_API_URL=${VITE_API_URL:-/api}
+        - VITE_APP_TITLE=${VITE_APP_TITLE:-C2 Beacon Server}
+    container_name: ${APP_NAME:-c2-beacon}-nginx
+    ports:
+      - "${NGINX_HOST_PORT:-47430}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../infra/docker/fastapi.prod
+    container_name: ${APP_NAME:-c2-beacon}-backend
+    ports:
+      - "${BACKEND_HOST_PORT:-47431}:8000"
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - RELOAD=false
+    volumes:
+      - c2_data:/app/data
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  c2_data:

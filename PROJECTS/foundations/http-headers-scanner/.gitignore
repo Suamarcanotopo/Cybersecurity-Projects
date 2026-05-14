@@ -1,0 +1,70 @@
+# ©AngelaMos | 2026
+# .gitignore
+#
+# This file lists patterns of files and folders that git should NEVER
+# track. Anything matching a pattern below is invisible to `git status`
+# and won't be committed. We do this to avoid two problems:
+#
+#   1. Privacy — we never want to accidentally commit a sensitive file
+#      a user might pass to the tool.
+#
+#   2. Noise — build artifacts and caches change constantly. Tracking
+#      them would clutter every commit and create merge conflicts.
+#
+# Each line is a "glob" pattern (* matches any characters).
+
+# -----------------------------------------------------------------------------
+# Python build/install artifacts
+# -----------------------------------------------------------------------------
+# __pycache__: bytecode Python generates from .py files when it runs them.
+# We never edit these, and they regenerate on every run, so ignore them.
+__pycache__/
+# *.py[cod] = .pyc, .pyo, .pyd — older bytecode formats Python may emit.
+*.py[cod]
+*$py.class
+# Build outputs from `pip wheel`, hatchling, etc.
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+*.so
+
+# -----------------------------------------------------------------------------
+# Virtual environments — created by `uv venv`, never committed
+# -----------------------------------------------------------------------------
+# A virtual environment is a per-project Python install. It lives inside
+# the project directory. Committing it would balloon the repo and pin
+# the user to your operating system. Always recreate locally.
+.venv/
+venv/
+env/
+
+# -----------------------------------------------------------------------------
+# Tooling caches — these speed up repeated runs but never need committing
+# -----------------------------------------------------------------------------
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+# Coverage report files from pytest-cov.
+.coverage
+htmlcov/
+
+# -----------------------------------------------------------------------------
+# IDE / editor scratch files
+# -----------------------------------------------------------------------------
+# Each editor drops its own metadata. None of it belongs in the repo.
+.vscode/
+.idea/
+*.swp
+*.swo
+# macOS Finder dumps these in every directory it has opened.
+.DS_Store
+
+# -----------------------------------------------------------------------------
+# Local environment files (may contain secrets)
+# -----------------------------------------------------------------------------
+# We never use .env in this project, but list it just in case. Anything
+# containing secrets should never reach the public repo.
+.env
+.env.local

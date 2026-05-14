@@ -1,0 +1,121 @@
+// ===================
+// © AngelaMos | 2026
+// alert-feed.module.scss
+
+// CSS module for the live alert feed component
+
+// Styles the feed container with surface background and
+// muted border, a header row with title and connection
+// status dot (green connected, red disconnected), and a
+// scrollable list of alert rows in a 6-column grid
+// (time, IP, method, path, severity, score). Applies
+// tabular-nums to time and score columns, monospace to
+// IP, truncation to path, and per-method color classes
+// (methodGet through methodOptions) using $method-* tokens.
+// Connects to components/alert-feed, styles/_tokens
+// ===================
+
+@use '@/styles/tokens' as *;
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4 $space-5;
+  border-bottom: 1px solid $border-muted;
+}
+
+.title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin: 0;
+}
+
+.status {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+}
+
+.connected {
+  background: $severity-low;
+}
+
+.disconnected {
+  background: $severity-high;
+}
+
+.list {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 80px 130px 48px 1fr auto 60px;
+  gap: $space-3;
+  align-items: center;
+  padding: $space-2-5 $space-5;
+  border-bottom: 1px solid $border-muted;
+  font-size: $font-size-xs;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.time {
+  color: $text-lighter;
+  font-variant-numeric: tabular-nums;
+}
+
+.ip {
+  color: $text-light;
+  font-family: monospace;
+}
+
+.path {
+  color: $text-light;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score {
+  color: $text-lighter;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.method {
+  font-family: monospace;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-2xs;
+  letter-spacing: $tracking-wide;
+  color: $text-lighter;
+}
+
+.methodGet { color: $method-get; }
+.methodPost { color: $method-post; }
+.methodPut { color: $method-put; }
+.methodDelete { color: $method-delete; }
+.methodPatch { color: $method-patch; }
+.methodHead { color: $method-head; }
+.methodOptions { color: $method-options; }
+
+.empty {
+  padding: $space-10;
+  text-align: center;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}

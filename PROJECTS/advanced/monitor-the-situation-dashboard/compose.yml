@@ -1,0 +1,130 @@
+# ©AngelaMos | 2026
+# compose.yml
+
+name: ${APP_NAME:-monitor}
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: conf/docker/prod/vite.docker
+    container_name: ${APP_NAME:-monitor}-nginx
+    ports:
+      - "${NGINX_HOST_PORT:-8432}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: conf/docker/prod/go.docker
+    container_name: ${APP_NAME:-monitor}-backend
+    expose:
+      - "8080"
+    env_file:
+      - .env.prod
+    environment:
+      - APP_ENVIRONMENT=production
+      - DATABASE_URL=postgres://${POSTGRES_USER:-monitor}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-monitor}?sslmode=disable
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "/app", "-healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: ${APP_NAME:-monitor}-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-monitor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-monitor}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-monitor} -d ${POSTGRES_DB:-monitor}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: ${APP_NAME:-monitor}-redis
+    command: redis-server --appendonly yes ${REDIS_PASSWORD:+--requirepass ${REDIS_PASSWORD}}
+    volumes:
+      - redisdata:/data
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ${REDIS_PASSWORD:+-a ${REDIS_PASSWORD}} ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.203.83.0/24
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.203.84.0/24
+
+volumes:
+  pgdata:
+  redisdata:

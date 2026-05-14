@@ -1,0 +1,181 @@
+// ===================
+// © AngelaMos | 2026
+// threat-detail.module.scss
+
+// CSS module for the threat detail slide-in panel
+
+// Styles a full-height modal overlay (60% opacity black,
+// z-modal) with a right-aligned 520px max-width panel.
+// Contains a sticky header with close button, sectioned
+// body with 2-column grids for overview and request fields,
+// a component scores section with labeled progress bars
+// ($accent fill on $bg-surface-300 track), and a matched
+// rules section with monospace accent-tinted tags. Connects
+// to components/threat-detail, styles/_tokens
+// ===================
+
+@use '@/styles/tokens' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 60%);
+  z-index: $z-modal;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.panel {
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  background: $bg-surface-100;
+  border-left: 1px solid $border-default;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-5 $space-6;
+  border-bottom: 1px solid $border-muted;
+  position: sticky;
+  top: 0;
+  background: $bg-surface-100;
+  z-index: 1;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  margin: 0;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  color: $text-light;
+  cursor: pointer;
+  transition: background $duration-fast $ease-out;
+
+  &:hover {
+    background: $bg-surface-200;
+  }
+}
+
+.body {
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.sectionTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-3;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.fieldLabel {
+  font-size: $font-size-2xs;
+  color: $text-muted;
+}
+
+.fieldValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.mono {
+  font-size: $font-size-xs;
+  color: $text-light;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.scores {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: 40px 1fr 50px;
+  gap: $space-3;
+  align-items: center;
+}
+
+.scoreLabel {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  text-transform: uppercase;
+  font-weight: $font-weight-medium;
+}
+
+.scoreBar {
+  height: 6px;
+  background: $bg-surface-300;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.scoreFill {
+  height: 100%;
+  background: $accent;
+  border-radius: $radius-full;
+  transition: width $duration-slow $ease-out;
+}
+
+.scoreValue {
+  font-size: $font-size-xs;
+  color: $text-light;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.rule {
+  padding: $space-1 $space-2-5;
+  background: $accent-muted;
+  color: $accent;
+  border-radius: $radius-sm;
+  font-size: $font-size-2xs;
+  font-family: monospace;
+}

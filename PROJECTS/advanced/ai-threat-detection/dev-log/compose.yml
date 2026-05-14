@@ -1,0 +1,48 @@
+# ©AngelaMos | 2026
+# compose.yml
+#
+# Docker Compose stack for the dev-log traffic generation
+# environment
+#
+# Runs two services on a bridge network: app (FastAPI target
+# built from the local Dockerfile with a /health check) and
+# nginx (alpine image reverse-proxying port 58319 to the
+# app, writing combined-format access logs to a named volume
+# vigil_dev_nginx_logs). The nginx container clears stale
+# log files on startup for clean sessions
+
+services:
+  app:
+    build: .
+    container_name: vigil-devlog-app
+    networks:
+      - devlog
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  nginx:
+    image: nginx:alpine
+    container_name: vigil-devlog-nginx
+    command: sh -c "rm -f /var/log/nginx/access.log /var/log/nginx/error.log && exec nginx -g 'daemon off;'"
+    ports:
+      - "58319:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - devlog
+
+networks:
+  devlog:
+    driver: bridge
+
+volumes:
+  nginx_logs:
+    name: vigil_dev_nginx_logs

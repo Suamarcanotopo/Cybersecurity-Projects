@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # CRITICAL: Multiple severe security issues
+  dangerous-app:
+    image: nginx:latest
+    container_name: dangerous-container
+
+    # CRITICAL: Privileged mode - full host access
+    privileged: true
+
+    # CRITICAL: Docker socket mounted - container escape possible
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/passwd:/host-passwd:ro
+      - /root/.ssh:/ssh-keys:ro
+
+    # CRITICAL: Dangerous capabilities
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - SYS_PTRACE
+
+    # MEDIUM: Running on host network
+    network_mode: host
+
+    # MEDIUM: No security options
+    ports:
+      - "80:80"
+      - "443:443"
+
+    environment:
+      # CRITICAL: Hardcoded secrets
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - DATABASE_PASSWORD=SuperSecret123

@@ -1,0 +1,253 @@
+# ©AngelaMos | 2026
+# Justfile
+
+set export
+set shell := ["bash", "-uc"]
+
+project := file_name(justfile_directory())
+version := `git describe --tags --always 2>/dev/null || echo "dev"`
+binary := "monitor"
+
+# =============================================================================
+# Default
+# =============================================================================
+
+default:
+    @just --list --unsorted
+
+# =============================================================================
+# Linting and Formatting
+# =============================================================================
+
+[group('lint')]
+lint *ARGS:
+    cd backend && golangci-lint run --timeout=5m {{ARGS}}
+
+[group('lint')]
+lint-fix:
+    cd backend && golangci-lint run --timeout=5m --fix
+
+[group('lint')]
+format:
+    cd backend && golangci-lint fmt
+
+[group('lint')]
+tidy:
+    cd backend && go mod tidy
+
+[group('lint')]
+vet:
+    cd backend && go vet ./...
+
+# =============================================================================
+# Testing
+# =============================================================================
+
+[group('test')]
+test *ARGS:
+    cd backend && go test -race ./... {{ARGS}}
+
+[group('test')]
+test-v *ARGS:
+    cd backend && go test -race -v ./... {{ARGS}}
+
+[group('test')]
+cover:
+    cd backend && go test -race -cover ./...
+
+# =============================================================================
+# CI / Quality
+# =============================================================================
+
+[group('ci')]
+ci: lint test
+    @echo "All checks passed."
+
+[group('ci')]
+check: lint vet
+
+# =============================================================================
+# Development (host go)
+# =============================================================================
+
+[group('dev')]
+run *ARGS:
+    cd backend && go run ./cmd/api {{ARGS}}
+
+[group('dev')]
+dev-serve:
+    cd backend && go run ./cmd/api -config config.yaml
+
+# =============================================================================
+# Build (Production)
+# =============================================================================
+
+[group('prod')]
+build:
+    cd backend && go build -ldflags="-s -w" -o ../bin/{{binary}} ./cmd/api
+    @echo "Built: bin/{{binary}} ($(du -h bin/{{binary}} | cut -f1))"
+
+[group('prod')]
+build-static:
+    cd backend && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -trimpath -o ../bin/{{binary}} ./cmd/api
+    @echo "Built static: bin/{{binary}} ($(du -h bin/{{binary}} | cut -f1))"
+
+[group('prod')]
+build-debug:
+    cd backend && go build -o ../bin/{{binary}} ./cmd/api
+
+[group('prod')]
+install:
+    cd backend && go install ./cmd/api
+
+# =============================================================================
+# Database
+# =============================================================================
+
+[group('db')]
+migrate *ARGS:
+    docker compose --env-file .env.prod -f compose.yml exec backend sh -c 'goose -dir /migrations postgres "$DATABASE_URL" up' {{ARGS}}
+
+[group('db')]
+migrate-dev *ARGS:
+    docker compose -f dev.compose.yml exec backend sh -c 'cd /app && goose -dir migrations postgres "$DATABASE_URL" up' {{ARGS}}
+
+[group('db')]
+migrate-down:
+    docker compose -f dev.compose.yml exec backend sh -c 'cd /app && goose -dir migrations postgres "$DATABASE_URL" down'
+
+[group('db')]
+migrate-status:
+    docker compose -f dev.compose.yml exec backend sh -c 'cd /app && goose -dir migrations postgres "$DATABASE_URL" status'
+
+[group('db')]
+psql:
+    docker compose -f dev.compose.yml exec postgres psql -U $${POSTGRES_USER:-monitor} -d $${POSTGRES_DB:-monitor}
+
+[group('db')]
+redis-cli:
+    docker compose -f dev.compose.yml exec redis redis-cli
+
+# =============================================================================
+# Docker (production)
+# =============================================================================
+
+[group('docker')]
+up *ARGS:
+    docker compose --env-file .env.prod -f compose.yml up {{ARGS}}
+
+[group('docker')]
+start *ARGS:
+    docker compose --env-file .env.prod -f compose.yml up -d --build {{ARGS}}
+
+[group('docker')]
+down *ARGS:
+    docker compose --env-file .env.prod -f compose.yml down {{ARGS}}
+
+[group('docker')]
+logs *SERVICE:
+    docker compose --env-file .env.prod -f compose.yml logs -f {{SERVICE}}
+
+[group('docker')]
+ps:
+    docker compose --env-file .env.prod -f compose.yml ps
+
+[group('docker')]
+build-prod:
+    docker compose --env-file .env.prod -f compose.yml build
+
+# =============================================================================
+# Docker (development)
+# =============================================================================
+
+[group('docker')]
+dev-up *ARGS:
+    docker compose -f dev.compose.yml up {{ARGS}}
+
+[group('docker')]
+dev-start *ARGS:
+    docker compose -f dev.compose.yml up -d --build {{ARGS}}
+
+[group('docker')]
+dev-down *ARGS:
+    docker compose -f dev.compose.yml down {{ARGS}}
+
+[group('docker')]
+dev-logs *SERVICE:
+    docker compose -f dev.compose.yml logs -f {{SERVICE}}
+
+[group('docker')]
+dev-ps:
+    docker compose -f dev.compose.yml ps
+
+[group('docker')]
+dev-shell service='backend':
+    docker compose -f dev.compose.yml exec -it {{service}} /bin/sh
+
+[group('docker')]
+dev-restart:
+    docker compose -f dev.compose.yml down
+    docker compose -f dev.compose.yml up -d --build
+    docker compose -f dev.compose.yml logs -f
+
+[group('docker')]
+dev-clean:
+    docker compose -f dev.compose.yml down -v
+
+# =============================================================================
+# Cloudflare Tunnel
+# =============================================================================
+
+[group('tunnel')]
+tunnel-up *ARGS:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml up {{ARGS}}
+
+[group('tunnel')]
+tunnel-start *ARGS:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml up -d --build {{ARGS}}
+
+[group('tunnel')]
+tunnel-down *ARGS:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml down {{ARGS}}
+
+[group('tunnel')]
+tunnel-logs:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml logs -f cloudflared
+
+[group('tunnel')]
+prod-restart:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml down
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml up -d
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml logs -f
+
+[group('tunnel')]
+prod-redeploy:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml down
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml up -d --build
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml logs -f
+
+[group('tunnel')]
+prod-logs *SERVICE:
+    docker compose --env-file .env.prod -f compose.yml -f cloudflared.compose.yml logs -f {{SERVICE}}
+
+# =============================================================================
+# Utilities
+# =============================================================================
+
+[group('util')]
+info:
+    @echo "Project:  {{project}}"
+    @echo "Version:  {{version}}"
+    @echo "Go:       $(cd backend && go version | cut -d' ' -f3)"
+    @echo "OS:       {{os()}} ({{arch()}})"
+    @echo "Module:   $(head -1 backend/go.mod | cut -d' ' -f2)"
+
+[group('util')]
+clean:
+    -rm -rf bin/
+    -rm -rf backend/tmp/
+    @echo "Cleaned build artifacts."
+
+[group('util')]
+env-init:
+    @if [ ! -f .env ]; then cp .env.example .env && echo "created .env from .env.example — fill in secrets"; else echo ".env already exists"; fi

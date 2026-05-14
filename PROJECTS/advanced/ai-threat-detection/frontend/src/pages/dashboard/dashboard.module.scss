@@ -1,0 +1,195 @@
+// ===================
+// © AngelaMos | 2026
+// dashboard.module.scss
+
+// CSS module for the dashboard page layout
+
+// Styles a padded column flex page with a 4-column
+// responsive stat row (collapsing to 2 then 1 at lg/sm
+// breakpoints), a severity section with a proportional
+// colored bar (high/medium/low segments with animated
+// widths) and dot legend, a 2-column bottom row
+// (collapsing to 1 at lg) for the alert feed and ranked
+// lists with monospace labels and tabular-nums counts, and
+// a severity-high-themed WebSocket error banner. Connects
+// to pages/dashboard, styles/_index
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.loading {
+  @include flex-center;
+  height: 300px;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.severitySection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+}
+
+.severityBar {
+  display: flex;
+  height: 12px;
+  border-radius: $radius-full;
+  overflow: hidden;
+  background: $bg-surface-300;
+}
+
+.severityBarEmpty {
+  height: 12px;
+  border-radius: $radius-full;
+  background: $bg-surface-300;
+  @include flex-center;
+  font-size: $font-size-2xs;
+  color: $text-muted;
+}
+
+.severityHigh {
+  background: $severity-high;
+  transition: width $duration-slow $ease-out;
+}
+
+.severityMedium {
+  background: $severity-medium;
+  transition: width $duration-slow $ease-out;
+}
+
+.severityLow {
+  background: $severity-low;
+  transition: width $duration-slow $ease-out;
+}
+
+.legend {
+  display: flex;
+  gap: $space-5;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+}
+
+.dotHigh {
+  background: $severity-high;
+}
+
+.dotMedium {
+  background: $severity-medium;
+}
+
+.dotLow {
+  background: $severity-low;
+}
+
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lists {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.rankedList {
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+}
+
+.rankedTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-default;
+  margin: 0 0 $space-3;
+}
+
+.rankedItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.rankedItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-1-5 0;
+  font-size: $font-size-xs;
+}
+
+.rankedLabel {
+  color: $text-light;
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankedCount {
+  color: $text-lighter;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  margin-left: $space-3;
+}
+
+.emptyText {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.wsError {
+  padding: $space-3 $space-4;
+  background: $severity-high-bg;
+  border: 1px solid $severity-high;
+  border-radius: $radius-md;
+  font-size: $font-size-xs;
+  color: $severity-high;
+}

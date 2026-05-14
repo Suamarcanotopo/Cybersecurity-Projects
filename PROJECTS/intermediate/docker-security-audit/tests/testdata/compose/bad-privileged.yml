@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    image: ubuntu:latest
+
+    # CRITICAL: Privileged container
+    privileged: true
+
+    # MEDIUM: No resource limits
+    # MEDIUM: No restart policy
+
+    # HIGH: PID host mode - can see all host processes
+    pid: host
+
+    # HIGH: IPC host mode
+    ipc: host
+
+    volumes:
+      # CRITICAL: Root filesystem mounted
+      - /:/host
+
+      # CRITICAL: Proc filesystem
+      - /proc:/host-proc
+
+      # CRITICAL: Sys filesystem
+      - /sys:/host-sys
+
+    # MEDIUM: Running as root (no user specified)
+
+    command: sleep infinity

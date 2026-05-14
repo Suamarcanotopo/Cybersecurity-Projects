@@ -1,0 +1,72 @@
+// ©AngelaMos | 2026
+// CVEVelocityPanel.module.scss
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--fg-4);
+}
+
+.spark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--fg-4);
+  color: var(--fg-2);
+}
+
+.recent {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.recent thead th {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+  text-align: left;
+  padding: var(--row-py) var(--row-px);
+  border-bottom: 1px solid var(--fg-4);
+  font-weight: 400;
+}
+
+.recent tbody td {
+  padding: var(--row-py) var(--row-px);
+  font-size: var(--type-body);
+  color: var(--fg-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent tbody tr:hover {
+  background: var(--bg-row-hover);
+}
+
+.cveId {
+  font-family: var(--font-mono);
+  width: 38%;
+}
+
+.severity {
+  width: 22%;
+  color: var(--fg-2);
+}
+
+.epss {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  width: 18%;
+  text-align: right;
+}
+
+.ago {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  width: 22%;
+  color: var(--fg-3);
+  text-align: right;
+}

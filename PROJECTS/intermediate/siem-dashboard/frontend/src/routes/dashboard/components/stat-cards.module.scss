@@ -1,0 +1,50 @@
+// ===================
+// ©AngelaMos | 2026
+// stat-cards.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-4;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: $space-4 $space-5;
+  @include flex-column;
+  gap: $space-1;
+}
+
+.value {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  line-height: $line-height-tight;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+}
+
+.skeleton {
+  height: 48px;
+  background-color: $bg-surface-200;
+  border-radius: $radius-sm;
+}

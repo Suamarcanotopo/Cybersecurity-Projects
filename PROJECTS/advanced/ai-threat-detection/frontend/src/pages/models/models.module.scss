@@ -1,0 +1,210 @@
+// ===================
+// © AngelaMos | 2026
+// models.module.scss
+
+// CSS module for the models management page
+
+// Styles a status banner with loaded (green) and not-loaded
+// (amber) severity-themed variants, a retrain button with
+// accent-muted background and spinning icon animation during
+// pending state, an empty-state placeholder, and a
+// responsive 3-column grid (collapsing to 2/1) of model
+// cards showing type, version, training samples, threshold,
+// and a metrics section with tabular-nums monospace values
+// separated by a muted border. Connects to pages/models,
+// styles/_index
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  padding: $space-6;
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.loading {
+  @include flex-center;
+  height: 300px;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.banner {
+  padding: $space-4 $space-5;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.bannerLoaded {
+  background: $severity-low-bg;
+  border: 1px solid $severity-low;
+  color: $severity-low;
+}
+
+.bannerNotLoaded {
+  background: $severity-medium-bg;
+  border: 1px solid $severity-medium;
+  color: $severity-medium;
+}
+
+.bannerText {
+  text-transform: capitalize;
+}
+
+.actions {
+  display: flex;
+}
+
+.retrainBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2-5 $space-4;
+  background: $accent-muted;
+  border: 1px solid $accent;
+  border-radius: $radius-md;
+  color: $accent;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  @include transition-fast;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @include hover {
+    background: $accent;
+    color: $white;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.empty {
+  @include flex-center;
+  height: 200px;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-4;
+
+  @include breakpoint-down('lg') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint-down('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modelCard {
+  padding: $space-5;
+  background: $bg-surface-100;
+  border: 1px solid $border-muted;
+  border-radius: $radius-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.modelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modelType {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-default;
+  text-transform: uppercase;
+}
+
+.modelVersion {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  font-family: monospace;
+}
+
+.modelStats {
+  display: flex;
+  gap: $space-5;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: $space-0-5;
+}
+
+.statLabel {
+  font-size: $font-size-2xs;
+  color: $text-muted;
+}
+
+.statValue {
+  font-size: $font-size-sm;
+  color: $text-default;
+  font-variant-numeric: tabular-nums;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1-5;
+  padding-top: $space-3;
+  border-top: 1px solid $border-muted;
+}
+
+.metricsTitle {
+  font-size: $font-size-2xs;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  margin-bottom: $space-1;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-xs;
+}
+
+.metricKey {
+  color: $text-lighter;
+}
+
+.metricVal {
+  color: $text-light;
+  font-variant-numeric: tabular-nums;
+  font-family: monospace;
+}

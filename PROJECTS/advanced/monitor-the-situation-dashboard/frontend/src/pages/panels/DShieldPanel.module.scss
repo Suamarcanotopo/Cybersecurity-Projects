@@ -1,0 +1,66 @@
+// ©AngelaMos | 2026
+// DShieldPanel.module.scss
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead th {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+  text-align: left;
+  padding: var(--row-py) var(--row-px);
+  border-bottom: 1px solid var(--fg-4);
+  font-weight: 400;
+}
+
+.table tbody td {
+  padding: var(--row-py) var(--row-px);
+  font-size: var(--type-body);
+  color: var(--fg-1);
+}
+
+.table tbody tr:hover {
+  background: var(--bg-row-hover);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.summary {
+  margin: 8px;
+  font-size: var(--type-body);
+  color: var(--fg-3);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.tag {
+  padding: var(--row-py) var(--row-px);
+  font-family: var(--font-mono);
+  font-size: var(--type-col);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.tagBenign {
+  color: var(--fg-2);
+}
+
+.tagMalicious {
+  color: var(--amber);
+}

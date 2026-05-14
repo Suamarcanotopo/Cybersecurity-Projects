@@ -1,0 +1,31 @@
+# ©AngelaMos | 2026
+# Cargo.toml
+
+[package]
+name = "axumortem"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+axumortem-engine = { path = "../axumortem-engine" }
+axum = { version = "0.8", features = ["multipart"] }
+tokio = { workspace = true }
+sqlx = { version = "0.8", features = [
+    "runtime-tokio",
+    "postgres",
+    "uuid",
+    "chrono",
+    "json",
+    "migrate",
+] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace", "limit"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }

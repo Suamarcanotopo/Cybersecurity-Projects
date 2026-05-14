@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result": {
+    "events": [
+      {
+        "id": 7700001,
+        "detectedAt": "2026-05-01T17:23:14Z",
+        "startedAt": "2026-05-01T17:21:50Z",
+        "duration": 600,
+        "confidenceScore": 9,
+        "hijackerAsn": 64500,
+        "victimAsns": [15169, 13335],
+        "prefixes": ["203.0.113.0/24"]
+      },
+      {
+        "id": 7700002,
+        "detectedAt": "2026-05-01T18:02:09Z",
+        "startedAt": "2026-05-01T18:00:00Z",
+        "duration": 180,
+        "confidenceScore": 7,
+        "hijackerAsn": 64512,
+        "victimAsns": [3356],
+        "prefixes": ["198.51.100.0/24", "198.51.101.0/24"]
+      }
+    ]
+  }
+}

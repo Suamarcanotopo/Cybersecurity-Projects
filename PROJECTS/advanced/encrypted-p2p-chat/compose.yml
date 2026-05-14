@@ -1,0 +1,117 @@
+# ©AngelaMos | 2025
+# Production Docker Compose
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: chat-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-chat_auth}
+      POSTGRES_USER: ${POSTGRES_USER:-chat_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD required}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - chat_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chat_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  surrealdb:
+    image: surrealdb/surrealdb:v3.0.5
+    container_name: chat-surrealdb
+    command: start --log trace --user root --pass ${SURREAL_PASSWORD:?SURREAL_PASSWORD required} rocksdb:/data/database.db
+    environment:
+      - SURREAL_USER=root
+      - SURREAL_PASS=${SURREAL_PASSWORD}
+    volumes:
+      - surreal_data:/data
+    networks:
+      - chat_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:8-alpine
+    container_name: chat-redis
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 2gb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --loglevel warning
+    volumes:
+      - redis_data:/data
+    networks:
+      - chat_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  backend:
+    build:
+      context: .
+      dockerfile: conf/docker/prod/fastapi.docker
+    container_name: chat-backend
+    environment:
+      ENV: ${ENV:-production}
+      DEBUG: ${DEBUG:-false}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY required}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-chat_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-chat_auth}
+      SURREAL_URL: ws://surrealdb:8000
+      SURREAL_PASSWORD: ${SURREAL_PASSWORD}
+      REDIS_URL: redis://redis:6379
+      RP_ID: ${RP_ID:-localhost}
+      RP_NAME: ${RP_NAME:-Encrypted P2P Chat}
+      RP_ORIGIN: ${RP_ORIGIN:-https://localhost}
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      surrealdb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - chat_network
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: conf/docker/prod/vite.docker
+    container_name: chat-nginx
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    depends_on:
+      - backend
+    networks:
+      - chat_network
+    restart: always
+
+networks:
+  chat_network:
+    driver: bridge
+    name: chat_network
+
+volumes:
+  postgres_data:
+    name: chat_postgres_data
+  surreal_data:
+    name: chat_surreal_data
+  redis_data:
+    name: chat_redis_data

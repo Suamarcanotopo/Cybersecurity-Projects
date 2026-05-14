@@ -1,0 +1,187 @@
+# ©AngelaMos | 2025
+# Production Nginx Configuration
+# - Serves static frontend from /usr/share/nginx/html
+# - Proxies /api and /ws to FastAPI backend
+# - Caching, compression, security headers, rate limiting
+
+user nginx;
+worker_processes auto;
+worker_rlimit_nofile 100000;
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 4096;
+    use epoll;
+    multi_accept on;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # WebSocket upgrade handling
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
+    }
+
+    upstream backend {
+        server backend:8000 max_fails=3 fail_timeout=30s;
+        keepalive 32;
+    }
+
+    # Rate limit zones
+    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+    limit_conn_zone $binary_remote_addr zone=conn_limit:10m;
+
+    # Logging with timing and buffering
+    log_format main_timed '$remote_addr - $remote_user [$time_local] '
+                          '"$request" $status $body_bytes_sent '
+                          '"$http_referer" "$http_user_agent" '
+                          'rt=$request_time urt="$upstream_response_time"';
+
+    access_log /var/log/nginx/access.log main_timed buffer=32k flush=5s;
+
+    # Performance
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    keepalive_requests 100;
+    types_hash_max_size 2048;
+    server_tokens off;
+
+    # File cache
+    open_file_cache max=10000 inactive=20s;
+    open_file_cache_valid 30s;
+    open_file_cache_min_uses 2;
+    open_file_cache_errors on;
+
+    # Buffer sizes
+    client_body_buffer_size 128k;
+    client_header_buffer_size 16k;
+    client_max_body_size 10m;
+    large_client_header_buffers 4 16k;
+
+    # Timeouts
+    client_body_timeout 12s;
+    client_header_timeout 12s;
+    send_timeout 10s;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_min_length 256;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/json
+        application/javascript
+        application/xml+rss
+        application/atom+xml
+        font/truetype
+        font/opentype
+        application/vnd.ms-fontobject
+        image/svg+xml;
+
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+        # WebSocket to backend
+        location /ws {
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_read_timeout 3600s;
+            proxy_send_timeout 3600s;
+            proxy_connect_timeout 75s;
+            proxy_buffering off;
+        }
+
+        # API routes with rate limiting
+        location /api {
+            limit_req zone=api_limit burst=20 nodelay;
+            limit_conn conn_limit 20;
+
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            proxy_buffering on;
+            proxy_buffers 8 24k;
+            proxy_buffer_size 2k;
+
+            proxy_connect_timeout 75s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        }
+
+        # Static assets - aggressive caching
+        location ~* \.(jpg|jpeg|png|gif|ico|svg|webp|avif)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            access_log off;
+        }
+
+        location ~* \.(css|js)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            access_log off;
+        }
+
+        location ~* \.(woff|woff2|ttf|eot|otf)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            access_log off;
+        }
+
+        # index.html - never cache
+        location = /index.html {
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+        }
+
+        # SPA fallback
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+
+        # Deny hidden files
+        location ~ /\. {
+            deny all;
+            access_log off;
+            log_not_found off;
+        }
+    }
+}

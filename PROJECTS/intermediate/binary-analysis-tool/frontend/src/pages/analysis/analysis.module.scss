@@ -1,0 +1,1129 @@
+// ===================
+// © AngelaMos | 2026
+// analysis.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+$content-max: 1200px;
+$sidebar-width: 240px;
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: $bg-default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-4 $space-4 $space-8;
+
+  @include breakpoint-up('md') {
+    padding: $space-6 $space-8 $space-12;
+  }
+}
+
+.state {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: $bg-default;
+  @include flex-column-center;
+  gap: $space-3;
+}
+
+.stateCode {
+  font-size: $font-size-5xl;
+  font-weight: $font-weight-black;
+  color: $text-muted;
+  letter-spacing: $tracking-tight;
+}
+
+.stateLabel {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-lighter;
+}
+
+.stateBack {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+  padding: $space-2 $space-4;
+  border: 1px solid $border-default;
+  margin-top: $space-4;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $accent;
+    color: $accent;
+  }
+}
+
+.backLink {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+  @include transition-fast;
+
+  @include hover {
+    color: $accent;
+  }
+}
+
+.header {
+  width: 100%;
+  max-width: $content-max;
+  padding-bottom: $space-4;
+  border-bottom: 1px solid $border-default;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.headerTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-3;
+}
+
+.fileName {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-default;
+  word-break: break-all;
+
+  @include breakpoint-up('md') {
+    font-size: $font-size-3xl;
+  }
+}
+
+.badges {
+  display: flex;
+  gap: $space-2;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-lighter;
+  padding: $space-0-5 $space-2;
+  border: 1px solid $border-default;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  flex-wrap: wrap;
+}
+
+.hashBtn {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  @include transition-fast;
+
+  @include hover {
+    .hashValue {
+      color: $text-default;
+    }
+  }
+}
+
+.hashLabel {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.hashValue {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  @include transition-fast;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.metaLabel {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.metaValue {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.scoreCard {
+  width: 100%;
+  max-width: $content-max;
+  padding: $space-6 0;
+  border-bottom: 1px solid $border-default;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+
+  @include breakpoint-up('lg') {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.scoreMain {
+  display: flex;
+  align-items: baseline;
+  gap: $space-4;
+  flex-shrink: 0;
+}
+
+.scoreNumber {
+  font-size: $font-size-5xl;
+  font-weight: $font-weight-black;
+  line-height: $line-height-none;
+
+  @include breakpoint-up('md') {
+    font-size: $font-size-7xl;
+  }
+}
+
+.scoreInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.riskLabel {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+}
+
+.scoreSuffix {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.scoreBars {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-2 $space-5;
+
+  @include breakpoint-up('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.scoreBar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.scoreBarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scoreBarName {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $text-lighter;
+  @include truncate;
+}
+
+.scoreBarValue {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+}
+
+.scoreBarTrack {
+  height: 3px;
+  background: $border-muted;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background: $accent;
+  transition: width $duration-slow $ease-out;
+}
+
+.tabBar {
+  width: 100%;
+  max-width: $content-max;
+  display: flex;
+  gap: $space-1;
+  border-bottom: 1px solid $border-default;
+  overflow-x: auto;
+  @include hide-scrollbar;
+}
+
+.tab {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-muted;
+  padding: $space-3 $space-4;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  @include transition-fast;
+
+  @include hover {
+    color: $text-lighter;
+  }
+
+  &.tabActive {
+    color: $text-default;
+    border-bottom-color: $accent;
+  }
+}
+
+.tabContent {
+  width: 100%;
+  max-width: $content-max;
+}
+
+.tabPanel {
+  padding: $space-5 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.noData {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-muted;
+  padding: $space-10 0;
+  text-align: center;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-3;
+
+  @include breakpoint-up('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.summaryCard {
+  padding: $space-4;
+  border: 1px solid $border-default;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.summaryLabel {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.summaryValue {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.summaryDetail {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-lighter;
+}
+
+.overviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.sectionLabel {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $accent;
+}
+
+.anomalyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.anomalyItem {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  padding: $space-2 $space-3;
+  border-left: 2px solid $error-default;
+  background: $bg-surface-75;
+}
+
+.mitrePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.mitrePill {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-1 $space-2-5;
+  border: 1px solid $border-default;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $accent;
+    color: $accent;
+  }
+}
+
+.mitreId {
+  letter-spacing: $tracking-wider;
+  color: $text-default;
+}
+
+.mitreName {
+  color: $text-lighter;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-2 $space-4;
+
+  @include breakpoint-up('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.metaField {
+  display: flex;
+  flex-direction: column;
+  gap: $space-0-5;
+}
+
+.metaFieldLabel {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.metaFieldValue {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.libList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-2;
+  padding-top: $space-2;
+}
+
+.libItem {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  padding: $space-0-5 $space-2;
+  border: 1px solid $border-muted;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  @include hide-scrollbar;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+
+  th {
+    font-size: $font-size-3xs;
+    text-transform: uppercase;
+    letter-spacing: $tracking-widest;
+    color: $text-muted;
+    padding: $space-2 $space-3;
+    text-align: left;
+    border-bottom: 1px solid $border-default;
+    white-space: nowrap;
+    font-weight: $font-weight-regular;
+  }
+
+  td {
+    padding: $space-1-5 $space-3;
+    color: $text-lighter;
+    border-bottom: 1px solid $border-muted;
+    white-space: nowrap;
+  }
+}
+
+.tableRow {
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-75;
+  }
+
+  &.suspicious {
+    td {
+      color: $error-light;
+    }
+  }
+
+  &.blockBoundary {
+    td {
+      border-top: 2px solid $border-strong;
+    }
+  }
+}
+
+.cellMono {
+  font-family: $font-mono;
+}
+
+.cellRight {
+  text-align: right;
+}
+
+.cellMnemonic {
+  font-family: $font-mono;
+  font-weight: $font-weight-bold;
+  color: $text-default;
+}
+
+.perms {
+  display: flex;
+  gap: $space-0-5;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  letter-spacing: $tracking-wide;
+}
+
+.permActive {
+  color: $text-default;
+}
+
+.permInactive {
+  color: $text-muted;
+}
+
+.permExec {
+  color: $accent;
+}
+
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  width: 100%;
+  text-align: left;
+  @include transition-fast;
+
+  @include hover {
+    .collapseIcon {
+      color: $text-lighter;
+    }
+  }
+}
+
+.collapseIcon {
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  @include transition-fast;
+}
+
+.libraryGroup {
+  border: 1px solid $border-muted;
+}
+
+.libraryHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2-5 $space-3;
+  text-align: left;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-75;
+  }
+}
+
+.libraryName {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $text-default;
+  font-weight: $font-weight-medium;
+}
+
+.libraryMeta {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  display: flex;
+  gap: $space-3;
+  margin-left: auto;
+}
+
+.suspiciousCount {
+  color: $error-light;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.threatTag {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $error-light;
+  padding: $space-0-5 $space-1-5;
+  border: 1px solid $error-default;
+}
+
+.alertCards {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.alertCard {
+  padding: $space-3 $space-4;
+  border: 1px solid $error-default;
+  background: $bg-surface-75;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.alertName {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $text-default;
+}
+
+.alertDesc {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.alertApis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.apiTag {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-lighter;
+  padding: $space-0-5 $space-1-5;
+  border: 1px solid $border-default;
+}
+
+.severityBadge {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  padding: $space-0-5 $space-2;
+  border: 1px solid;
+}
+
+.severityLow {
+  color: #84cc16;
+  border-color: #84cc16;
+}
+
+.severityMedium {
+  color: #eab308;
+  border-color: #eab308;
+}
+
+.severityHigh {
+  color: #f97316;
+  border-color: #f97316;
+}
+
+.severityCritical {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.categoryBadge {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $text-lighter;
+  padding: $space-0-5 $space-1-5;
+  border: 1px solid $border-default;
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  padding: $space-2 $space-3;
+  background: $bg-surface-75;
+  border: 1px solid $border-default;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $text-default;
+  @include transition-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $accent;
+    outline: none;
+  }
+}
+
+.filterSelect {
+  padding: $space-2 $space-3;
+  background: $bg-surface-75;
+  border: 1px solid $border-default;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $text-lighter;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    border-color: $accent;
+    outline: none;
+  }
+}
+
+.filterToggle {
+  padding: $space-2 $space-3;
+  border: 1px solid $border-default;
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-muted;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-lighter;
+  }
+
+  &.filterActive {
+    border-color: $error-default;
+    color: $error-light;
+  }
+}
+
+.filterCount {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.stringValue {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  text-align: left;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-4;
+}
+
+.pageBtn {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $text-lighter;
+  padding: $space-1-5 $space-3;
+  border: 1px solid $border-default;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $accent;
+    color: $accent;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.pageInfo {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.entropyOverall {
+  display: flex;
+  align-items: baseline;
+  gap: $space-3;
+  padding: $space-4 0;
+}
+
+.entropyOverallLabel {
+  font-family: $font-mono;
+  font-size: $font-size-2xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-widest;
+  color: $text-muted;
+}
+
+.entropyOverallValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $text-default;
+}
+
+.entropyOverallScale {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.packingAlert {
+  padding: $space-4;
+  border: 1px solid $error-default;
+  background: $bg-surface-75;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.packingTitle {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+  color: $error-light;
+}
+
+.packingName {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-default;
+}
+
+.packingIndicator {
+  display: flex;
+  gap: $space-3;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+}
+
+.packingType {
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  flex-shrink: 0;
+}
+
+.packingEvidence {
+  color: $text-lighter;
+}
+
+.entropyBars {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.entropyRow {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  padding: $space-2 0;
+  border-bottom: 1px solid $border-muted;
+
+  &.anomalous {
+    border-left: 2px solid $error-default;
+    padding-left: $space-3;
+  }
+}
+
+.entropyMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entropySectionName {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $text-default;
+}
+
+.entropyClassification {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wider;
+}
+
+.entropyBarWrap {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.entropyBarTrack {
+  flex: 1;
+  height: 6px;
+  background: $border-muted;
+}
+
+.entropyBarFill {
+  height: 100%;
+  transition: width $duration-slow $ease-out;
+}
+
+.entropyValue {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-lighter;
+  min-width: 36px;
+  text-align: right;
+}
+
+.entropyDetails {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+}
+
+.entropyDetail {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.entropyFlags {
+  display: flex;
+  gap: $space-1;
+}
+
+.entropyFlag {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  color: $error-light;
+  padding: $space-0-5 $space-1-5;
+  border: 1px solid $error-default;
+}
+
+.disasmLayout {
+  display: flex;
+  gap: $space-4;
+  min-height: 500px;
+
+  @include breakpoint-down('md') {
+    flex-direction: column;
+  }
+}
+
+.fnSidebar {
+  width: $sidebar-width;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  border-right: 1px solid $border-default;
+  padding-right: $space-4;
+
+  @include breakpoint-down('md') {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid $border-default;
+    padding-right: 0;
+    padding-bottom: $space-4;
+    max-height: 200px;
+  }
+}
+
+.fnList {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $space-0-5;
+  @include hide-scrollbar;
+}
+
+.fnItem {
+  display: flex;
+  flex-direction: column;
+  gap: $space-0-5;
+  padding: $space-1-5 $space-2;
+  text-align: left;
+  @include transition-fast;
+
+  @include hover {
+    background: $bg-surface-75;
+  }
+
+  &.fnActive {
+    background: $bg-surface-100;
+    border-left: 2px solid $accent;
+    padding-left: calc($space-2 - 2px);
+  }
+
+  &.fnEntry {
+    .fnAddr {
+      color: $accent;
+    }
+  }
+}
+
+.fnAddr {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.fnName {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $text-default;
+  @include truncate;
+}
+
+.fnMeta {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+}
+
+.disasmMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.fnHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.fnHeaderName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-default;
+  font-family: $font-mono;
+}
+
+.fnHeaderMeta {
+  font-family: $font-mono;
+  font-size: $font-size-3xs;
+  color: $text-muted;
+  letter-spacing: $tracking-wide;
+}
+
+.cfgContainer {
+  overflow-x: auto;
+  padding: $space-4;
+  border: 1px solid $border-muted;
+  background: $bg-surface-75;
+}
+
+.cfgSvg {
+  max-width: 100%;
+  height: auto;
+  min-height: 200px;
+}

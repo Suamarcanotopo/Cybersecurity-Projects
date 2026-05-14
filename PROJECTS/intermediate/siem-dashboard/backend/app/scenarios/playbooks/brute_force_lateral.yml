@@ -1,0 +1,446 @@
+# ©AngelaMos | 2026
+# brute_force_lateral.yml
+
+name: Brute Force with Lateral Movement
+description: >
+  Simulates an external attacker brute-forcing SSH credentials on a
+  perimeter host, gaining access, then moving laterally to internal
+  servers using stolen credentials. Maps to MITRE ATT&CK Initial
+  Access and Lateral Movement tactics.
+
+mitre_tactics:
+  - TA0001
+  - TA0008
+mitre_techniques:
+  - T1110.001
+  - T1021.004
+
+events:
+  - delay_seconds: 0.5
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    source_port: 48201
+    dest_port: 22
+    hostname: fw-edge-01
+    message: Inbound SSH connection allowed
+    action: allow
+    protocol: tcp
+    rule_name: ssh-management
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.3
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: admin
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.2
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: root
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.2
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: deploy
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: ubuntu
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: jenkins
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: postgres
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: www-data
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: backup
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: sysadmin
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: devops
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: ftpuser
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: testuser
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: operator
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: nagios
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: ansible
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: git
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: docker
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: mysql
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.15
+    source_type: auth
+    event_type: login_failure
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: redis
+    message: Failed SSH login attempt
+    auth_method: password
+    result: failure
+    failure_reason: invalid_password
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 0.8
+    source_type: ids
+    event_type: ids_alert
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: ids-sensor-01
+    message: SSH brute force attack detected
+    signature_id: 2001219
+    signature_name: ET SCAN Potential SSH Brute Force
+    classification: attempted-admin
+    priority: 1
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 1.5
+    source_type: auth
+    event_type: login_success
+    source_ip: 203.0.113.42
+    dest_ip: 10.1.1.50
+    hostname: bastion-01
+    username: deploy
+    message: Successful SSH login after brute force
+    auth_method: password
+    result: success
+    service: sshd
+    mitre_tactic: TA0001
+    mitre_technique: T1110.001
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.1.50
+    hostname: bastion-01
+    username: deploy
+    message: Credential harvesting via /etc/shadow read
+    process_name: cat
+    process_id: 28451
+    parent_process: bash
+    command_line: cat /etc/shadow
+    file_path: /etc/shadow
+    mitre_tactic: TA0006
+    mitre_technique: T1003.008
+
+  - delay_seconds: 2.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.1.50
+    hostname: bastion-01
+    username: deploy
+    message: SSH key discovery
+    process_name: find
+    process_id: 28467
+    parent_process: bash
+    command_line: find / -name id_rsa -type f 2>/dev/null
+    mitre_tactic: TA0007
+    mitre_technique: T1552.004
+
+  - delay_seconds: 2.5
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 10.1.1.50
+    dest_ip: 10.1.2.10
+    source_port: 55102
+    dest_port: 22
+    hostname: fw-internal-01
+    message: Internal SSH connection from bastion to app server
+    action: allow
+    protocol: tcp
+    rule_name: internal-ssh
+    mitre_tactic: TA0008
+    mitre_technique: T1021.004
+
+  - delay_seconds: 1.0
+    source_type: auth
+    event_type: login_success
+    source_ip: 10.1.1.50
+    dest_ip: 10.1.2.10
+    hostname: app-server-01
+    username: deploy
+    message: Lateral movement SSH login to application server
+    auth_method: publickey
+    result: success
+    service: sshd
+    mitre_tactic: TA0008
+    mitre_technique: T1021.004
+
+  - delay_seconds: 2.0
+    source_type: firewall
+    event_type: connection_allowed
+    source_ip: 10.1.1.50
+    dest_ip: 10.1.2.20
+    source_port: 55118
+    dest_port: 22
+    hostname: fw-internal-01
+    message: Internal SSH connection from bastion to database server
+    action: allow
+    protocol: tcp
+    rule_name: internal-ssh
+    mitre_tactic: TA0008
+    mitre_technique: T1021.004
+
+  - delay_seconds: 1.0
+    source_type: auth
+    event_type: login_success
+    source_ip: 10.1.1.50
+    dest_ip: 10.1.2.20
+    hostname: db-server-01
+    username: deploy
+    message: Lateral movement SSH login to database server
+    auth_method: publickey
+    result: success
+    service: sshd
+    mitre_tactic: TA0008
+    mitre_technique: T1021.004
+
+  - delay_seconds: 3.0
+    source_type: endpoint
+    event_type: process_execution
+    source_ip: 10.1.2.20
+    hostname: db-server-01
+    username: deploy
+    message: Database dump on compromised server
+    process_name: pg_dump
+    process_id: 31204
+    parent_process: bash
+    command_line: pg_dump -U postgres --all-databases -f /tmp/dump.sql
+    mitre_tactic: TA0009
+    mitre_technique: T1005

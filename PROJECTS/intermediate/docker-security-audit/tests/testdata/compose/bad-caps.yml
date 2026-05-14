@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    image: alpine:latest
+
+    # CRITICAL: Extremely dangerous capabilities
+    cap_add:
+      - SYS_MODULE      # Load kernel modules
+      - SYS_RAWIO       # Raw I/O, access /dev/mem
+      - SYS_PTRACE      # Trace any process, inject code
+      - SYS_ADMIN       # Mount filesystems, quotas, etc
+      - DAC_OVERRIDE    # Bypass all file permissions
+      - MAC_ADMIN       # Modify SELinux/AppArmor
+      - NET_ADMIN       # Modify network, sniff traffic
+      - BPF             # Load BPF programs
+
+    # MEDIUM: Should drop all caps first, then add only needed ones
+
+    volumes:
+      # HIGH: Kernel modules
+      - /lib/modules:/lib/modules:ro
+
+      # HIGH: Device access
+      - /dev:/dev
+
+    command: sleep infinity

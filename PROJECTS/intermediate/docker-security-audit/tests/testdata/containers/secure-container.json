@@ -1,0 +1,70 @@
+{
+  "Id": "secure123456789012345678901234567890123456789012345678901234567890",
+  "Created": "2025-01-02T10:00:00.000000000Z",
+  "Name": "/secure-app",
+  "Config": {
+    "Image": "nginx:1.25.3-alpine",
+    "User": "1000:1000",
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_ENV=production",
+      "LOG_LEVEL=info"
+    ],
+    "Cmd": [
+      "nginx",
+      "-g",
+      "daemon off;"
+    ],
+    "Healthcheck": {
+      "Test": [
+        "CMD-SHELL",
+        "curl -f http://localhost:80/health || exit 1"
+      ],
+      "Interval": 30000000000,
+      "Timeout": 5000000000,
+      "Retries": 3
+    }
+  },
+  "HostConfig": {
+    "Privileged": false,
+    "PidMode": "",
+    "IpcMode": "private",
+    "NetworkMode": "bridge",
+    "RestartPolicy": {
+      "Name": "unless-stopped"
+    },
+    "CapAdd": [
+      "NET_BIND_SERVICE"
+    ],
+    "CapDrop": [
+      "ALL"
+    ],
+    "SecurityOpt": [
+      "no-new-privileges:true",
+      "apparmor=docker-default"
+    ],
+    "ReadonlyRootfs": true,
+    "Binds": [
+      "/app/nginx.conf:/etc/nginx/nginx.conf:ro",
+      "/app/html:/usr/share/nginx/html:ro"
+    ],
+    "Tmpfs": {
+      "/var/cache/nginx": "",
+      "/var/run": ""
+    },
+    "Resources": {
+      "Memory": 536870912,
+      "MemoryReservation": 268435456,
+      "MemorySwap": 536870912,
+      "CpuShares": 512,
+      "CpuQuota": 50000,
+      "CpuPeriod": 100000,
+      "PidsLimit": 100
+    }
+  },
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Pid": 54321
+  }
+}

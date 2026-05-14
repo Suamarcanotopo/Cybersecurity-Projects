@@ -1,0 +1,21 @@
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+
+        iifname "lo" accept
+        ct state established,related accept
+
+        tcp dport 22 accept
+        ip saddr 10.0.0.0/8 tcp dport 22 accept
+
+        tcp dport 80 accept
+        tcp dport 80 accept
+
+        ip saddr 192.168.1.0/24 tcp dport 443 accept
+        ip saddr 192.168.0.0/16 tcp dport 443 drop
+
+        tcp dport 8080 accept
+        ip protocol tcp drop
+        drop
+    }
+}

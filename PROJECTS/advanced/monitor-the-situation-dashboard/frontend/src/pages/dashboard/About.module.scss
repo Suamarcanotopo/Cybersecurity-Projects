@@ -1,0 +1,74 @@
+// ©AngelaMos | 2026
+// About.module.scss
+
+.dialog {
+  background: var(--bg-panel);
+  color: var(--fg-1);
+  border: 1px solid var(--fg-4);
+  padding: 0;
+  max-width: 480px;
+  width: 90%;
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+
+  &::backdrop {
+    background: rgb(0, 0, 0, 60%);
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--fg-4);
+}
+
+.title {
+  font-size: var(--type-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--fg-3);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--fg-1);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--fg-2);
+    outline-offset: 1px;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  color: var(--fg-2);
+  line-height: 1.4;
+
+  p {
+    margin: 0;
+  }
+}
+
+.kbd {
+  font-family: var(--font-mono);
+  color: var(--fg-1);
+  border: 1px solid var(--fg-4);
+  padding: 0 4px;
+}

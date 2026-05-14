@@ -1,0 +1,184 @@
+// ===================
+// ©AngelaMos | 2026
+// admin.module.scss
+// ===================
+
+@use '@/styles' as *;
+
+.page {
+  @include flex-column;
+  gap: $space-4;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  @include flex-between;
+}
+
+.count {
+  font-size: $font-size-sm;
+  color: $text-lighter;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $bg-surface-100;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.th {
+  text-align: left;
+  padding: $space-3 $space-4;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-lighter;
+  text-transform: uppercase;
+  letter-spacing: $tracking-wide;
+  border-bottom: 1px solid $border-default;
+  background-color: $bg-surface-75;
+}
+
+.td {
+  padding: $space-3 $space-4;
+  font-size: $font-size-sm;
+  color: $text-default;
+  border-bottom: 1px solid $border-muted;
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: $space-0-5 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: capitalize;
+
+  &.admin {
+    color: $accent;
+    background-color: hsl(0 84% 39% / 15%);
+  }
+
+  &.analyst {
+    color: $severity-low;
+    background-color: $severity-low-bg;
+  }
+}
+
+.statusDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+  background-color: $text-muted;
+
+  &.active {
+    background-color: $status-resolved;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $space-2;
+}
+
+.actionBtn {
+  @include flex-center;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.dangerBtn {
+  color: $error-default;
+
+  @include hover {
+    border-color: $error-default;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+}
+
+.pageBtn {
+  padding: $space-2 $space-3;
+  background-color: transparent;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-light;
+  cursor: pointer;
+  @include transition-fast;
+
+  @include hover {
+    border-color: $border-strong;
+    color: $text-default;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.pageInfo {
+  font-size: $font-size-xs;
+  color: $text-lighter;
+}
+
+.empty {
+  text-align: center;
+  color: $text-muted;
+  padding: $space-8;
+}
+
+.skeleton {
+  height: 48px;
+  background-color: $bg-surface-100;
+  border-bottom: 1px solid $border-muted;
+}
+
+.roleSelect {
+  height: 28px;
+  padding: 0 $space-2;
+  background-color: $bg-control;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  color: $text-default;
+  cursor: pointer;
+  @include transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $border-strong;
+  }
+}
