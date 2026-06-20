@@ -27,7 +27,7 @@ dependencies = [
     "aiohttp==3.13.4",
     # Settings management
     "pydantic==2.12.5",
-    "pydantic-settings==2.12.0",
+    "pydantic-settings==2.14.2",
     "python-dotenv==1.2.2",
     # Utilities
     "email-validator==2.3.0",
